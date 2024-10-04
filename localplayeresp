@@ -44,7 +44,7 @@ local function createGUI(character)
             usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
         else
         ownerTag = " || User "
-            usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
+            usernameLabel.Font = Enum.Font.Inconsolata-- Default font for other players
         end
 
         -- Format the display name and rebirth count with the owner tag

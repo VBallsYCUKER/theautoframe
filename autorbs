@@ -1495,6 +1495,17 @@ end
                                                                 game:GetService("ReplicatedStorage").Package.Events
                                                                     .voleys
                                                             Event:InvokeServer(A_1, A_2, A_3)
+							local args = {
+							    [1] = "Multishots",
+							    [2] = false,
+							    [3] = {
+							        ["FaceMouse"] = true,
+							        ["MouseHit"] = CFrame.new(1416.617431640625, 18.40189552307129, 1168.0621337890625, 0.17417548596858978, -0.5866186618804932, 0.790911853313446, 7.450580596923828e-09, 0.8031889796257019, 0.5957245230674744, -0.984714686870575, -0.10376060009002686, 0.13989581167697906)
+							    },
+							    [4] = "Blacknwhite27"
+							}
+							
+							game:GetService("ReplicatedStorage"):WaitForChild("Package"):WaitForChild("Events"):WaitForChild("be"):InvokeServer(unpack(args))
 
                                                         end)
                                                         task.wait(.3)

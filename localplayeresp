@@ -48,6 +48,7 @@ local function createGUI(character)
     local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
     local ownerTag = ""
     local totalStats = math.huge -- Start with the highest possible value
+    local rebirths = 0 -- Default rebirths
 
     if playerStats then
         -- Fetch the various stats
@@ -59,6 +60,9 @@ local function createGUI(character)
         -- Calculate the lowest stat
         totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
 
+        -- Fetch rebirths
+        rebirths = playerStats:FindFirstChild("Rebirths") and playerStats.Rebirths.Value or 0
+
         -- Add "Owner" tag if the player is one of the specified usernames
         if player.Name == "Steve72009" or player.Name == "Pserson2" or player.Name == "whowhatwhen1230" then
             ownerTag = " || Script Creator"
@@ -67,8 +71,8 @@ local function createGUI(character)
             usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
         end
 
-        -- Format the display name and total stats with the owner tag
-        usernameLabel.Text = string.format("%s || %s%s", player.DisplayName, format_number(totalStats), ownerTag)
+        -- Format the display name and total stats with the rebirths and owner tag
+        usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), rebirths, ownerTag)
     else
         usernameLabel.Text = player.DisplayName -- Fallback if stats not found
     end
@@ -116,8 +120,11 @@ local function createGUI(character)
             -- Calculate the lowest stat again
             totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
 
+            -- Fetch rebirths again
+            rebirths = playerStats:FindFirstChild("Rebirths") and playerStats.Rebirths.Value or 0
+
             -- Update the username label with the latest stats
-            usernameLabel.Text = string.format("%s || %s%s", player.DisplayName, format_number(totalStats), ownerTag)
+            usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), rebirths, ownerTag)
 
             -- Change outline color based on updated total stats
             if totalStats >= 1e11 then
@@ -169,44 +176,44 @@ local ab = Instance.new("TextLabel")
 ba.Parent = game.CoreGui
 ba.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ca.Parent = ba
-ca.Active = true
-ca.BackgroundColor3 = Color3.new(0.176471, 0.176471, 0.176471)
-ca.Draggable = true
-ca.Position = UDim2.new(0.698610067, 0, 0.098096624, 0)
-ca.Size = UDim2.new(0, 370, 0, 52)
-ca.Font = Enum.Font.SourceSansSemibold
-ca.Text = "Anti AFK"
-ca.TextColor3 = Color3.new(0, 1, 1)
-ca.TextSize = 35
-
--- Frame for Anti-AFK
+ca.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ca.BackgroundTransparency = 0.5
+ca.Position = UDim2.new(0.5, -100, 0.5, -50)
+ca.Size = UDim2.new(0, 200, 0, 100)
+ca.Font = Enum.Font.SourceSansBold
+ca.Text = "Anti-AFK"
+ca.TextColor3 = Color3.fromRGB(0, 0, 0)
+ca.TextScaled = true
+ca.TextWrapped = true
 da.Parent = ca
-da.BackgroundColor3 = Color3.new(0, 0, 0)
-da.Position = UDim2.new(0, 0, 1.05870914, 0)
-da.Size = UDim2.new(1, 0, 0, 30)
-
--- Label in Anti-AFK
+da.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+da.BackgroundTransparency = 1
+da.Position = UDim2.new(0, 0, 0, 50)
+da.Size = UDim2.new(1, 0, 0, 50)
+da.Font = Enum.Font.SourceSans
+da.Text = "You will be kicked if you stay idle for too long."
+da.TextColor3 = Color3.fromRGB(0, 0, 0)
+da.TextScaled = true
+da.TextWrapped = true
 _b.Parent = da
-_b.BackgroundColor3 = Color3.new(1, 1, 1)
-_b.Size = UDim2.new(1, 0, 1, 0)
+_b.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_b.BackgroundTransparency = 1
+_b.Position = UDim2.new(0, 0, 1, 0)
+_b.Size = UDim2.new(1, 0, 0, 50)
 _b.Font = Enum.Font.SourceSans
-_b.Text = "Click anywhere to avoid being kicked!"
-_b.TextColor3 = Color3.new(1, 0, 0)
+_b.Text = "Stay active to avoid being kicked."
+_b.TextColor3 = Color3.fromRGB(0, 0, 0)
 _b.TextScaled = true
+_b.TextWrapped = true
 
--- Another label in Anti-AFK
-ab.Parent = da
-ab.BackgroundColor3 = Color3.new(1, 1, 1)
-ab.Position = UDim2.new(0, 0, 1.05870914, 0)
-ab.Size = UDim2.new(1, 0, 1, 0)
-ab.Font = Enum.Font.SourceSans
-ab.Text = "Made by Spire"
-ab.TextColor3 = Color3.new(1, 1, 1)
-ab.TextScaled = true
+local idleTime = 0
+game:GetService("RunService").RenderStepped:Connect(function()
+    idleTime = idleTime + 0.1
+    if idleTime > 10 then
+        game.Players.LocalPlayer:Kick("You have been idle for too long!")
+    end
+end)
 
--- Function to update anti-AFK activity
-game:GetService("UserInputService").InputBegan:Connect(function()
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
-    wait(0.1)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    idleTime = 0 -- Reset idle time on any input
 end)

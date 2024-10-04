@@ -1,4 +1,4 @@
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VBallsYCUKER/theautoframe/refs/heads/main/localplayeresp", true))()
 local loaded = false
  
    success, err = pcall(function()
@@ -1570,6 +1570,3 @@ end
         
     end
 end
-
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/VBallsYCUKER/theautoframe/refs/heads/main/localplayeresp", true))()

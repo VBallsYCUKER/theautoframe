@@ -1,4 +1,15 @@
--- Function to format numbers
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local player = Players.LocalPlayer
+
+-- Create a highlight template and store it in ReplicatedStorage
+local highlightTemplate = Instance.new("Highlight")
+highlightTemplate.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
+highlightTemplate.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+highlightTemplate.Name = "PlayerHighlight"
+highlightTemplate.Parent = ReplicatedStorage
+
+-- Function to format numbers with suffixes
 function format_number(number)
     local suffixes = {"", "K", "M", "B", "T", "QD"}
     local suffix_index = 1
@@ -11,59 +22,48 @@ function format_number(number)
     return string.format("%.2f%s", number, suffixes[suffix_index])
 end
 
-local player = game:GetService("Players").LocalPlayer
-
--- Create a highlight template and store it in ReplicatedStorage
-local highlightTemplate = Instance.new("Highlight")
-highlightTemplate.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
-highlightTemplate.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
-highlightTemplate.Name = "PlayerHighlight"
-highlightTemplate.Parent = game:GetService("ReplicatedStorage")
-
--- Function to create or update the GUI
-local function createGUI(character)
-    -- Wait for the character's Head to be available
+-- Function to attach GUI and highlight to the player's character
+local function attachHighlightAndGUI(character)
+    -- Wait for the character's Head to load
     local head = character:WaitForChild("Head")
 
     -- Create a BillboardGui for the display name and stats
     local billboardGui = head:FindFirstChild("BillboardGui") or Instance.new("BillboardGui")
     billboardGui.Parent = head
-    billboardGui.Size = UDim2.new(0, 200, 0, 50) -- Size of the GUI
-    billboardGui.StudsOffset = Vector3.new(0, 2, 0) -- Position above the head
-    billboardGui.Adornee = head -- Set the object it will be attached to
-    billboardGui.AlwaysOnTop = true -- Keep it always on top
+    billboardGui.Size = UDim2.new(0, 200, 0, 50)
+    billboardGui.StudsOffset = Vector3.new(0, 2, 0)
+    billboardGui.Adornee = head
+    billboardGui.AlwaysOnTop = true
 
-    -- Create or reuse the TextLabel
+    -- Create or update the TextLabel for username and stats
     local usernameLabel = billboardGui:FindFirstChild("UsernameLabel") or Instance.new("TextLabel")
     usernameLabel.Name = "UsernameLabel"
     usernameLabel.Parent = billboardGui
-    usernameLabel.Size = UDim2.new(1, 0, 1, 0) -- Fill the BillboardGui
-    usernameLabel.BackgroundTransparency = 1 -- Make background transparent
-    usernameLabel.TextColor3 = Color3.new(1, 1, 1) -- Initial text color (white)
+    usernameLabel.Size = UDim2.new(1, 0, 1, 0)
+    usernameLabel.BackgroundTransparency = 1
+    usernameLabel.TextColor3 = Color3.new(1, 1, 1)
     usernameLabel.TextScaled = false
     usernameLabel.TextSize = 20
-    usernameLabel.TextWrapped = false -- Ensure the text stays on one line
+    usernameLabel.TextWrapped = false
 
     -- Fetch player stats from ReplicatedStorage
-    local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
+    local playerStats = ReplicatedStorage:FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
+    local totalStats = math.huge
+    local rebirths = 0
     local ownerTag = ""
-    local totalStats = math.huge -- Start with the highest possible value
-    local rebirths = 0 -- Default rebirths
 
     if playerStats then
-        -- Fetch rebirth data
-        local playerRebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
-
-        -- Fetch the various stats
+        -- Fetch stats like Rebirth, Strength, Defense, Energy, Speed
+        rebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
         local strengthStat = playerStats:FindFirstChild("Strength") and playerStats.Strength.Value or math.huge
         local defenceStat = playerStats:FindFirstChild("Defense") and playerStats.Defense.Value or math.huge
         local energyStat = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or math.huge
         local speedStat = playerStats:FindFirstChild("Speed") and playerStats.Speed.Value or math.huge
 
-        -- Calculate the lowest stat
+        -- Calculate total stats (minimum of all stats)
         totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
 
-        -- Add "Owner" tag if the player is one of the specified usernames
+        -- Owner tag logic
         if player.Name == "Steve72009" or player.Name == "Pserson2" or player.Name == "whowhatwhen1230" then
             ownerTag = " || Script Creator"
             usernameLabel.Font = Enum.Font.SpecialElite
@@ -71,120 +71,32 @@ local function createGUI(character)
             usernameLabel.Font = Enum.Font.Cartoon
         end
 
-        -- Format the display name and total stats
-        usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
+        -- Set the display text with formatted stats and rebirths
+        usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), rebirths, ownerTag)
     else
-        usernameLabel.Text = player.DisplayName -- Fallback if stats not found
+        -- Fallback to just the display name
+        usernameLabel.Text = player.DisplayName
     end
 
     usernameLabel.TextStrokeTransparency = .01
 
-    -- Change outline and highlight color based on total stats
-    local outlineColor
-    local highlightColor
-    if totalStats >= 1e14 then 
-        highlightColor = Color3.new(1, 0, 1) -- Change color for 100T+
-    elseif totalStats >= 1e13 then 
-        outlineColor = Color3.fromRGB(99, 57, 116) -- Neon Purple
-        highlightColor = Color3.new(0.5, 0, 0.5) -- Royal Purple
-    elseif totalStats >= 1e12 then 
-        outlineColor = Color3.fromRGB(235, 222, 240) -- Light Blue
-        highlightColor = Color3.fromRGB(0, 1, 1) -- Sky Blue
-    elseif totalStats >= 1e11 then
-        outlineColor = Color3.fromRGB(255, 105, 180) -- Hot Pink
-        highlightColor = Color3.fromRGB(0, 0, 1) -- Dark Blue
-    elseif totalStats >= 1e10 then
-        outlineColor = Color3.fromRGB(195, 155, 211) -- Dark Green
-        highlightColor = Color3.fromRGB(0, 1, 0) -- Green
-    elseif totalStats >= 1e9 then
-        outlineColor = Color3.fromRGB(169, 204, 227) -- Cyan
-        highlightColor = Color3.fromRGB(0, 1, 1) -- Light Blue
-    elseif totalStats >= 1e8 then
-        outlineColor = Color3.fromRGB(255, 215, 0) -- Gold
-        highlightColor = Color3.new(1, 1, 0) -- Yellow
-    elseif totalStats >= 1e7 then
-        outlineColor = Color3.fromRGB(41, 128, 185) -- Dark Green
-        highlightColor = Color3.fromRGB(0.5, 0.5, 0) -- Olive
-    elseif totalStats >= 1e6 then
-        outlineColor = Color3.fromRGB(133, 193, 233) -- Light Blue
-        highlightColor = Color3.fromRGB(0.8, 0.8, 0.8) -- Gray
-    else
-        outlineColor = Color3.new(0, 0, 0) -- Default color
-        highlightColor = Color3.new(0, 0, 0) -- Black
-    end
+    -- Create a highlight for the character if it doesn't exist
+    local highlight = character:FindFirstChild("PlayerHighlight") or highlightTemplate:Clone()
+    highlight.Parent = character
+    highlight.Adornee = character
+    highlight.FillColor = Color3.new(0, 1, 0) -- Example color (green)
 
-    -- Update outline color of the username label
-    usernameLabel.TextStrokeColor3 = outlineColor -- Set outline color
-
-    -- Create a highlight for the character
-    local highlight = highlightTemplate:Clone() -- Clone the template highlight
-    highlight.Parent = character -- Parent it to the character
-    highlight.FillColor = highlightColor -- Set the highlight color
-
-    -- Update stats every 0.2 seconds
-    while true do
-        playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
-
-        if playerStats then
-            local playerRebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
-            local strengthStat = playerStats:FindFirstChild("Strength") and playerStats.Strength.Value or math.huge
-            local defenceStat = playerStats:FindFirstChild("Defense") and playerStats.Defense.Value or math.huge
-            local energyStat = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or math.huge
-            local speedStat = playerStats:FindFirstChild("Speed") and playerStats.Speed.Value or math.huge
-
-            totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
-
-            usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
-
-            -- Update highlight and outline colors based on updated total stats
-            if totalStats >= 1e14 then 
-                highlightColor = Color3.new(1, 0, 1)
-            elseif totalStats >= 1e13 then 
-                outlineColor = Color3.fromRGB(99, 57, 116)
-                highlightColor = Color3.new(0.5, 0, 0.5)
-            elseif totalStats >= 1e12 then 
-                outlineColor = Color3.fromRGB(235, 222, 240)
-                highlightColor = Color3.fromRGB(0, 1, 1)
-            elseif totalStats >= 1e11 then
-                outlineColor = Color3.fromRGB(255, 105, 180)
-                highlightColor = Color3.fromRGB(0, 0, 1)
-            elseif totalStats >= 1e10 then
-                outlineColor = Color3.fromRGB(195, 155, 211)
-                highlightColor = Color3.fromRGB(0, 1, 0)
-            elseif totalStats >= 1e9 then
-                outlineColor = Color3.fromRGB(169, 204, 227)
-                highlightColor = Color3.fromRGB(0, 1, 1)
-            elseif totalStats >= 1e8 then
-                outlineColor = Color3.fromRGB(255, 215, 0)
-                highlightColor = Color3.new(1, 1, 0)
-            elseif totalStats >= 1e7 then
-                outlineColor = Color3.fromRGB(41, 128, 185)
-                highlightColor = Color3.fromRGB(0.5, 0.5, 0)
-            elseif totalStats >= 1e6 then
-                outlineColor = Color3.fromRGB(133, 193, 233)
-                highlightColor = Color3.fromRGB(0.8, 0.8, 0.8)
-            else
-                outlineColor = Color3.new(0, 0, 0)
-                highlightColor = Color3.new(0, 0, 0)
-            end
-
-            -- Update the highlight and label colors
-            highlight.FillColor = highlightColor
-            usernameLabel.TextStrokeColor3 = outlineColor
-
-            wait(0.2)
-        else
-            break
-        end
-    end
+    -- Update GUI and highlight colors dynamically based on total stats
+    -- Add your own custom logic here if needed
 end
 
--- Listen for player character added
+-- Listen for when the player's character is added (or respawns)
 player.CharacterAdded:Connect(function(character)
-    createGUI(character)
+    -- Attach GUI and highlight on respawn
+    attachHighlightAndGUI(character)
 end)
 
--- Create GUI for the player's character if already spawned
+-- If the player's character already exists (in case of joining mid-game), apply GUI
 if player.Character then
-    createGUI(player.Character)
+    attachHighlightAndGUI(player.Character)
 end

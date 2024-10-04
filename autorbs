@@ -440,10 +440,16 @@ local FormsList = {
         rebirthReq = 20
     }, {
         name = "Beast",
-        reqvalue = 120000001,
-        endrangevalue = 12000000000000000000000000000000000,
+        reqvalue = 120000002,
+        endrangevalue = 120000002,
         alignment = "Neutral",
         rebirthReq = 24
+    }, {
+        name = "Astral Instinct",
+        reqvalue = 140000001,
+        endrangevalue = 12000000000000000000000000000000000,
+        alignment = "Neutral",
+        rebirthReq = 28
     }}, -- close evil
 
     Good = {{
@@ -580,10 +586,17 @@ local FormsList = {
         rebirthReq = 20
     }, {
         name = "Beast",
-        reqvalue = 120000001,
-        endrangevalue = 12000000000000000000000000000000000,
+        reqvalue = 120000002,
+        endrangevalue = 120000002,
         alignment = "Neutral",
         rebirthReq = 24
+    }, {
+
+        name = "Astral Instinct",
+        reqvalue = 140000001,
+        endrangevalue = 12000000000000000000000000000000000,
+        alignment = "Neutral",
+        rebirthReq = 28
     }}
 }
 

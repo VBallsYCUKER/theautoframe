@@ -1,3 +1,26 @@
+-- Function to format numbers
+function format_number(number)
+    local suffixes = {"", "K", "M", "B", "T", "QD"}
+    local suffix_index = 1
+
+    while math.abs(number) >= 1000 and suffix_index < #suffixes do
+        number = number / 1000.0
+        suffix_index = suffix_index + 1
+    end
+
+    return string.format("%.2f%s", number, suffixes[suffix_index])
+end
+
+local player = game:GetService("Players").LocalPlayer
+
+-- Create a highlight and store it in ReplicatedStorage
+local highlightTemplate = Instance.new("Highlight")
+highlightTemplate.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
+highlightTemplate.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+highlightTemplate.Name = "PlayerHighlight"
+highlightTemplate.Parent = game:GetService("ReplicatedStorage")
+
+-- Function to create or update the GUI
 local function createGUI(character)
     -- Wait for the character's Head to be available
     local head = character:WaitForChild("Head")
@@ -49,7 +72,7 @@ local function createGUI(character)
         end
 
         -- Format the display name and total stats with the exact rebirths and owner tag
-        usernameLabel.Text = usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
+        usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
     else
         usernameLabel.Text = player.DisplayName -- Fallback if stats not found
     end
@@ -127,3 +150,72 @@ local function createGUI(character)
         wait(0.2) -- Wait for 0.2 seconds before the next update
     end
 end
+
+-- Function to recreate GUI and highlight
+local function onCharacterAdded(character)
+    -- Create GUI
+    createGUI(character) -- Create the GUI for the new character
+end
+
+-- Connect to CharacterAdded to create GUI on respawn
+player.CharacterAdded:Connect(onCharacterAdded)
+
+-- Create GUI for the initial character
+if player.Character then
+    onCharacterAdded(player.Character)
+end
+
+-- Anti-AFK GUI
+wait(0.5)
+local ba = Instance.new("ScreenGui")
+local ca = Instance.new("TextLabel")
+local da = Instance.new("Frame")
+local _b = Instance.new("TextLabel")
+local ab = Instance.new("TextLabel")
+
+ba.Parent = game.CoreGui
+ba.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ca.Parent = ba
+ca.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+ca.Position = UDim2.new(0.5, -100, 0.5, -100)
+ca.Size = UDim2.new(0, 200, 0, 200)
+ca.Font = Enum.Font.SourceSans
+ca.Text = ""
+ca.TextColor3 = Color3.fromRGB(255, 255, 255)
+ca.TextScaled = true
+ca.TextSize = 14
+ca.TextWrapped = true
+
+da.Parent = ca
+da.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+da.BorderSizePixel = 0
+da.Position = UDim2.new(0, 0, 0.7, 0)
+da.Size = UDim2.new(1, 0, 0, 1)
+
+_b.Parent = da
+_b.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+_b.Size = UDim2.new(0, 100, 0, 100)
+
+-- Setting up the Anti-AFK feature
+local connection
+local function onInputChanged(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        -- Resetting the inactivity timer
+        if connection then
+            connection:Disconnect()
+        end
+        connection = game:GetService("RunService").Heartbeat:Connect(function()
+            ca.Text = "You are active!"
+        end)
+    end
+end
+
+-- Listen for user input
+game:GetService("UserInputService").InputChanged:Connect(onInputChanged)
+
+-- Ensure the GUI closes properly
+game.Players.PlayerRemoving:Connect(function(playerLeaving)
+    if playerLeaving == player then
+        ba:Destroy()
+    end
+end)

@@ -47,67 +47,101 @@ local function createGUI(character)
     -- Fetch player stats from ReplicatedStorage
     local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
     local ownerTag = ""
-    local totalStats = 0
+    local totalStats = math.huge -- Start with the highest possible value
 
-    local function updateStats()
-        if playerStats then
-            -- Fetch the various stats
-            local strengthStat = playerStats:FindFirstChild("Strength") and playerStats.Strength.Value or 0
-            local defenceStat = playerStats:FindFirstChild("Defense") and playerStats.Defense.Value or 0
-            local energyStat = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or 0
-            local speedStat = playerStats:FindFirstChild("Speed") and playerStats.Speed.Value or 0
+    if playerStats then
+        -- Fetch the various stats
+        local strengthStat = playerStats:FindFirstChild("Strength") and playerStats.Strength.Value or math.huge
+        local defenceStat = playerStats:FindFirstChild("Defense") and playerStats.Defense.Value or math.huge
+        local energyStat = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or math.huge
+        local speedStat = playerStats:FindFirstChild("Speed") and playerStats.Speed.Value or math.huge
 
-            -- Calculate total stats
-            totalStats = strengthStat + defenceStat + energyStat + speedStat
+        -- Calculate the lowest stat
+        totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
 
-            -- Add "Owner" tag if the player is one of the specified usernames
-            if player.Name == "Steve72009" or player.Name == "Pserson2" or player.Name == "whowhatwhen1230" then
-                ownerTag = " || Owner 🗿"
-                usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
-            else
-                usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
-            end
-
-            -- Format the display name and total stats with the owner tag
-            usernameLabel.Text = string.format("%s || %s%s", player.DisplayName, format_number(totalStats), ownerTag)
+        -- Add "Owner" tag if the player is one of the specified usernames
+        if player.Name == "Steve72009" or player.Name == "Pserson2" or player.Name == "whowhatwhen1230" then
+            ownerTag = " || Owner 🗿"
+            usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
         else
-            usernameLabel.Text = player.DisplayName -- Fallback if stats not found
+            usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
         end
 
-        usernameLabel.TextStrokeTransparency = .01
-
-        -- Change outline color based on total stats
-        local outlineColor
-        if totalStats >= 1e11 then
-            outlineColor = Color3.fromRGB(255, 105, 180)
-        elseif totalStats >= 1e10 then
-            outlineColor = Color3.fromRGB(165, 105, 189)
-        elseif totalStats >= 1e9 then
-            outlineColor = Color3.fromRGB(169, 204, 227)
-        elseif totalStats >= 1e8 then
-            outlineColor = Color3.fromRGB(255, 215, 0)
-        elseif totalStats >= 1e7 then
-            outlineColor = Color3.fromRGB(41, 128, 185)
-        elseif totalStats >= 1e6 then
-            outlineColor = Color3.fromRGB(133, 193, 233)
-        else
-            outlineColor = Color3.new(171, 235, 198)
-        end
-
-        -- Update outline color of the username label
-        usernameLabel.TextStrokeTransparency = 0.01 -- Reset stroke transparency
-        usernameLabel.TextStrokeColor3 = outlineColor -- Set outline color
+        -- Format the display name and total stats with the owner tag
+        usernameLabel.Text = string.format("%s || %s%s", player.DisplayName, format_number(totalStats), ownerTag)
+    else
+        usernameLabel.Text = player.DisplayName -- Fallback if stats not found
     end
 
-    -- Continuously update stats every 0.2 seconds
-    while true do
-        updateStats()
-        wait(0.2) -- Update every 0.2 seconds
+    usernameLabel.TextStrokeTransparency = .01
+
+    -- Change outline color based on total stats
+    local outlineColor
+    if totalStats >= 1e11 then
+        outlineColor = Color3.fromRGB(255, 105, 180) -- Hot Pink
+    elseif totalStats >= 1e10 then
+        outlineColor = Color3.fromRGB(165, 105, 189) -- Cyan
+    elseif totalStats >= 1e9 then
+        outlineColor = Color3.fromRGB(169, 204, 227) -- Dark Blue
+    elseif totalStats >= 1e8 then
+        outlineColor = Color3.fromRGB(255, 215, 0) -- Gold
+    elseif totalStats >= 1e7 then
+        outlineColor = Color3.fromRGB(41, 128, 185) -- Dark Green
+    elseif totalStats >= 1e6 then
+        outlineColor = Color3.fromRGB(133, 193, 233) -- Light Blue
+    else
+        outlineColor = Color3.new(171, 235, 198) -- Default color
     end
+
+    -- Update outline color of the username label
+    usernameLabel.TextStrokeTransparency = 0.01 -- Reset stroke transparency
+    usernameLabel.TextStrokeColor3 = outlineColor -- Set outline color
 
     -- Create a highlight for the character
     local highlight = highlightTemplate:Clone() -- Clone the template highlight
     highlight.Parent = character -- Parent it to the character
+
+    -- Update stats every 0.2 seconds
+    while true do
+        -- Fetch player stats from ReplicatedStorage again
+        playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
+
+        if playerStats then
+            -- Fetch the various stats again
+            strengthStat = playerStats:FindFirstChild("Strength") and playerStats.Strength.Value or math.huge
+            defenceStat = playerStats:FindFirstChild("Defense") and playerStats.Defense.Value or math.huge
+            energyStat = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or math.huge
+            speedStat = playerStats:FindFirstChild("Speed") and playerStats.Speed.Value or math.huge
+
+            -- Calculate the lowest stat again
+            totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
+
+            -- Update the username label with the latest stats
+            usernameLabel.Text = string.format("%s || %s%s", player.DisplayName, format_number(totalStats), ownerTag)
+
+            -- Change outline color based on updated total stats
+            if totalStats >= 1e11 then
+                outlineColor = Color3.fromRGB(255, 105, 180) -- Hot Pink
+            elseif totalStats >= 1e10 then
+                outlineColor = Color3.fromRGB(165, 105, 189) -- Cyan
+            elseif totalStats >= 1e9 then
+                outlineColor = Color3.fromRGB(169, 204, 227) -- Dark Blue
+            elseif totalStats >= 1e8 then
+                outlineColor = Color3.fromRGB(255, 215, 0) -- Gold
+            elseif totalStats >= 1e7 then
+                outlineColor = Color3.fromRGB(41, 128, 185) -- Dark Green
+            elseif totalStats >= 1e6 then
+                outlineColor = Color3.fromRGB(133, 193, 233) -- Light Blue
+            else
+                outlineColor = Color3.new(171, 235, 198) -- Default color
+            end
+
+            -- Update outline color of the username label
+            usernameLabel.TextStrokeColor3 = outlineColor -- Set outline color
+        end
+
+        wait(0.2) -- Wait for 0.2 seconds before the next update
+    end
 end
 
 -- Function to recreate GUI and highlight
@@ -143,36 +177,4 @@ ca.Size = UDim2.new(0, 370, 0, 52)
 ca.Font = Enum.Font.SourceSansSemibold
 ca.Text = "Anti AFK"
 ca.TextColor3 = Color3.new(0, 1, 1)
-ca.TextSize = 22
-
-da.Parent = ca
-da.BackgroundColor3 = Color3.new(0.196078, 0.196078, 0.196078)
-da.Position = UDim2.new(0, 0, 1.0192306, 0)
-da.Size = UDim2.new(0, 370, 0, 107)
-
-_b.Parent = da
-_b.BackgroundColor3 = Color3.new(0.176471, 0.176471, 0.176471)
-_b.Position = UDim2.new(0, 0, 0.800455689, 0)
-_b.Size = UDim2.new(0, 370, 0, 21)
-_b.Font = Enum.Font.Arial
-_b.Text = "Made by luca#5432"
-_b.TextColor3 = Color3.new(0, 1, 1)
-_b.TextSize = 20
-
-ab.Parent = da
-ab.BackgroundColor3 = Color3.new(0.176471, 0.176471, 0.176471)
-ab.Position = UDim2.new(0, 0, 0.158377, 0)
-ab.Size = UDim2.new(0, 370, 0, 44)
-ab.Font = Enum.Font.ArialBold
-ab.Text = "Status: Active"
-ab.TextColor3 = Color3.new(0, 1, 1)
-ab.TextSize = 20
-
-local bb = game:GetService('VirtualUser')
-game:GetService('Players').LocalPlayer.Idled:Connect(function()
-    bb:CaptureController()
-    bb:ClickButton2(Vector2.new())
-    ab.Text = "Roblox tried kicking you but I didn't let them!"
-    wait(2)
-    ab.Text = "Status: Active"
-end)
+ca.TextSize = 

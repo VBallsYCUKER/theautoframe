@@ -76,14 +76,14 @@ end
 
 -- Function to recreate GUI and highlight
 local function onCharacterAdded(character)
-    -- Create or reset the highlight
+    -- Create GUI
+    createGUI(character) -- Create the GUI for the new character
+
+    -- Ensure highlight is created and persistent
     local highlight = character:FindFirstChildOfClass("Highlight") or Instance.new("Highlight")
     highlight.Parent = character
     highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
     highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
-
-    -- Create GUI
-    createGUI(character) -- Create the GUI for the new character
 end
 
 -- Connect to CharacterAdded to create GUI on respawn
@@ -93,3 +93,22 @@ player.CharacterAdded:Connect(onCharacterAdded)
 if player.Character then
     onCharacterAdded(player.Character)
 end
+
+-- Function to ensure highlight stays on the character
+local function keepHighlight()
+    while true do
+        if player.Character then
+            local highlight = player.Character:FindFirstChildOfClass("Highlight")
+            if not highlight then
+                highlight = Instance.new("Highlight")
+                highlight.Parent = player.Character
+                highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
+                highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+            end
+        end
+        wait(1) -- Check every second to ensure highlight persists
+    end
+end
+
+-- Start the highlight persistence function
+keepHighlight()

@@ -1,18 +1,26 @@
 -- Variables
 local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local highlight = Instance.new("Highlight")
+local TweenService = game:GetService("TweenService")
 
--- Set up the Highlight
-highlight.Parent = character
-highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
-highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+-- Function to create the highlight and username label
+local function setupCharacter(character)
+    -- Create the Highlight
+    local highlight = Instance.new("Highlight")
+    highlight.Parent = character
+    highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
+    highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
 
--- Function to change color
-local function changeColor()
-    while true do
-        -- Cycle through colors every 2 seconds
-        for _, color in ipairs({
+    -- Function to create a smooth color transition
+    local function tweenColor(targetColor)
+        local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+        local tween = TweenService:Create(highlight, tweenInfo, {FillColor = targetColor})
+        tween:Play()
+        tween.Completed:Wait() -- Wait for the tween to complete
+    end
+
+    -- Function to change color
+    local function changeColor()
+        local colors = {
             Color3.fromRGB(255, 0, 0), -- Red
             Color3.fromRGB(0, 255, 0), -- Green
             Color3.fromRGB(255, 255, 0), -- Yellow
@@ -20,35 +28,47 @@ local function changeColor()
             Color3.fromRGB(255, 0, 255), -- Magenta
             Color3.fromRGB(0, 255, 255), -- Cyan
             Color3.fromRGB(255, 255, 255) -- White
-        }) do
-            highlight.FillColor = color
-            wait(2) -- Wait for 2 seconds before changing to the next color
+        }
+        
+        while true do
+            for _, color in ipairs(colors) do
+                tweenColor(color)
+                wait(2) -- Wait for 2 seconds before changing to the next color
+            end
         end
     end
+
+    -- Create the username label
+    local function createUsernameLabel()
+        local usernameLabel = Instance.new("BillboardGui")
+        usernameLabel.Size = UDim2.new(0, 200, 0, 50) -- Size of the BillboardGui
+        usernameLabel.Adornee = character:WaitForChild("Head") -- Attach to the head
+        usernameLabel.AlwaysOnTop = true -- Ensure it is always on top
+        usernameLabel.StudsOffset = Vector3.new(0, 2, 0) -- Position above the head
+
+        local textLabel = Instance.new("TextLabel")
+        textLabel.Text = player.Name
+        textLabel.Font = Enum.Font.ComicSans
+        textLabel.TextSize = 24
+        textLabel.BackgroundTransparency = 1
+        textLabel.TextColor3 = Color3.new(1, 1, 1) -- White text
+        textLabel.Size = UDim2.new(1, 0, 1, 0) -- Match the size of the BillboardGui
+        textLabel.TextScaled = true -- Scale text to fit
+
+        -- Set the textLabel's parent to the BillboardGui
+        textLabel.Parent = usernameLabel
+        usernameLabel.Parent = character -- Set the BillboardGui's parent to the character
+    end
+
+    -- Start the functions
+    changeColor()
+    createUsernameLabel()
 end
 
--- Function to create a username label
-local function createUsernameLabel()
-    local usernameLabel = Instance.new("BillboardGui")
-    usernameLabel.Size = UDim2.new(0, 200, 0, 50) -- Size of the BillboardGui
-    usernameLabel.Adornee = character:WaitForChild("Head") -- Attach to the head
-    usernameLabel.AlwaysOnTop = true -- Ensure it is always on top
-    usernameLabel.StudsOffset = Vector3.new(0, 2, 0) -- Position above the head
+-- Connect to the CharacterAdded event to set up the character
+player.CharacterAdded:Connect(setupCharacter)
 
-    local textLabel = Instance.new("TextLabel")
-    textLabel.Text = player.Name
-    textLabel.Font = Enum.Font.ComicSans
-    textLabel.TextSize = 24
-    textLabel.BackgroundTransparency = 1
-    textLabel.TextColor3 = Color3.new(1, 1, 1) -- White text
-    textLabel.Size = UDim2.new(1, 0, 1, 0) -- Match the size of the BillboardGui
-    textLabel.TextScaled = true -- Scale text to fit
-
-    -- Set the textLabel's parent to the BillboardGui
-    textLabel.Parent = usernameLabel
-    usernameLabel.Parent = character -- Set the BillboardGui's parent to the character
+-- If the character already exists, set it up immediately
+if player.Character then
+    setupCharacter(player.Character)
 end
-
--- Start functions
-changeColor()
-createUsernameLabel()

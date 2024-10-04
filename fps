@@ -1,0 +1,114 @@
+function format_number(number)
+    -- Return the number as a string without abbreviations
+    return tostring(number)
+end
+
+local player = game:GetService("Players").LocalPlayer
+
+-- Function to create or update the GUI
+local function createGUI(character)
+    -- Wait for the character's Head to be available
+    local head = character:WaitForChild("Head")
+
+    -- Create a BillboardGui for the display name and rebirth count
+    local billboardGui = head:FindFirstChild("BillboardGui") or Instance.new("BillboardGui")
+    billboardGui.Parent = head
+    billboardGui.Size = UDim2.new(0, 200, 0, 50) -- Size of the GUI
+    billboardGui.StudsOffset = Vector3.new(0, 2, 0) -- Position above the head
+    billboardGui.Adornee = head -- Set the object it will be attached to
+    billboardGui.AlwaysOnTop = true -- Keep it always on top
+
+    -- Create or reuse the TextLabel
+    local usernameLabel = billboardGui:FindFirstChild("UsernameLabel") or Instance.new("TextLabel")
+    usernameLabel.Name = "UsernameLabel" -- Set name for easy reference
+    usernameLabel.Parent = billboardGui
+    usernameLabel.Size = UDim2.new(1, 0, 1, 0) -- Fill the BillboardGui
+    usernameLabel.BackgroundTransparency = 1 -- Make background transparent
+    usernameLabel.TextColor3 = Color3.new(1, 1, 1) -- Initial text color (white)
+    usernameLabel.TextScaled = false -- Disable scaling to set a fixed size
+    usernameLabel.TextSize = 20 -- Set the desired text size (adjust as needed)
+    usernameLabel.TextWrapped = false -- Ensure the text stays on one line
+    usernameLabel.TextTruncate = Enum.TextTruncate.AtEnd -- Truncate if the text is too long
+
+    -- Fetch player stats from ReplicatedStorage
+    local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
+    if playerStats then
+        -- Fetch rebirth data
+        local playerRebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
+
+        -- Format the display name and rebirth count
+        usernameLabel.Text = string.format("%s || %s", player.DisplayName, format_number(playerRebirths))
+    else
+        usernameLabel.Text = player.DisplayName -- Fallback if stats not found
+    end
+
+    -- Check the player's username and set the font accordingly
+    if player.Name == "Steve72009" or player.Name == "Pserson2" then
+        usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
+    else
+        usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
+    end
+
+    usernameLabel.TextStrokeTransparency = .01
+
+    -- Create a highlight if it doesn't exist
+    local highlight = character:FindFirstChildOfClass("Highlight") or Instance.new("Highlight")
+    highlight.Parent = character
+    highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
+    highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+
+    -- Function to change color
+    local function changeColor()
+        while true do
+            for hue = 0, 1, 0.01 do -- Transition through hues
+                local color = Color3.fromHSV(hue, 1, 1) -- Full saturation and value for bright colors
+                highlight.FillColor = color -- Update highlight color
+                usernameLabel.TextColor3 = color -- Update text color
+                usernameLabel.TextStrokeTransparency = .01 -- Reset stroke transparency
+                wait(0.02) -- Wait for a smoother transition
+            end
+        end
+    end
+
+    -- Start changing colors
+    changeColor()
+end
+
+-- Function to recreate GUI and highlight
+local function onCharacterAdded(character)
+    -- Create GUI
+    createGUI(character) -- Create the GUI for the new character
+
+    -- Ensure highlight is created and persistent
+    local highlight = character:FindFirstChildOfClass("Highlight") or Instance.new("Highlight")
+    highlight.Parent = character
+    highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
+    highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+end
+
+-- Connect to CharacterAdded to create GUI on respawn
+player.CharacterAdded:Connect(onCharacterAdded)
+
+-- Create GUI for the initial character
+if player.Character then
+    onCharacterAdded(player.Character)
+end
+
+-- Function to ensure highlight stays on the character
+local function keepHighlight()
+    while true do
+        if player.Character then
+            local highlight = player.Character:FindFirstChildOfClass("Highlight")
+            if not highlight then
+                highlight = Instance.new("Highlight")
+                highlight.Parent = player.Character
+                highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
+                highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+            end
+        end
+        wait(1) -- Check every second to ensure highlight persists
+    end
+end
+
+-- Start the highlight persistence function
+keepHighlight()

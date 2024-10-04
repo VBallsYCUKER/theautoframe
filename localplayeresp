@@ -177,4 +177,36 @@ ca.Size = UDim2.new(0, 370, 0, 52)
 ca.Font = Enum.Font.SourceSansSemibold
 ca.Text = "Anti AFK"
 ca.TextColor3 = Color3.new(0, 1, 1)
-ca.TextSize = 
+ca.TextSize = 35
+
+-- Frame for Anti-AFK
+da.Parent = ca
+da.BackgroundColor3 = Color3.new(0, 0, 0)
+da.Position = UDim2.new(0, 0, 1.05870914, 0)
+da.Size = UDim2.new(1, 0, 0, 30)
+
+-- Label in Anti-AFK
+_b.Parent = da
+_b.BackgroundColor3 = Color3.new(1, 1, 1)
+_b.Size = UDim2.new(1, 0, 1, 0)
+_b.Font = Enum.Font.SourceSans
+_b.Text = "Click anywhere to avoid being kicked!"
+_b.TextColor3 = Color3.new(1, 0, 0)
+_b.TextScaled = true
+
+-- Another label in Anti-AFK
+ab.Parent = da
+ab.BackgroundColor3 = Color3.new(1, 1, 1)
+ab.Position = UDim2.new(0, 0, 1.05870914, 0)
+ab.Size = UDim2.new(1, 0, 1, 0)
+ab.Font = Enum.Font.SourceSans
+ab.Text = "Made by Spire"
+ab.TextColor3 = Color3.new(1, 1, 1)
+ab.TextScaled = true
+
+-- Function to update anti-AFK activity
+game:GetService("UserInputService").InputBegan:Connect(function()
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+    wait(0.1)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+end)

@@ -13,7 +13,7 @@ end
 
 local player = game:GetService("Players").LocalPlayer
 
--- Create a highlight template and store it in ReplicatedStorage
+-- Create a highlight and store it in ReplicatedStorage
 local highlightTemplate = Instance.new("Highlight")
 highlightTemplate.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
 highlightTemplate.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
@@ -43,10 +43,6 @@ local function createGUI(character)
     usernameLabel.TextScaled = false -- Disable scaling to set a fixed size
     usernameLabel.TextSize = 20 -- Set the desired text size (adjust as needed)
     usernameLabel.TextWrapped = false -- Ensure the text stays on one line
-
-    -- Set black text stroke color (outline)
-    usernameLabel.TextStrokeTransparency = 0 -- Make sure the stroke is visible
-    usernameLabel.TextStrokeColor3 = Color3.new(0, 0, 0) -- Black outline
 
     -- Fetch player stats from ReplicatedStorage
     local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
@@ -81,57 +77,50 @@ local function createGUI(character)
         usernameLabel.Text = player.DisplayName -- Fallback if stats not found
     end
 
-    -- Create a highlight for the character
-    local highlight = highlightTemplate:Clone() -- Clone the template highlight
-    highlight.Parent = character -- Parent it to the character
+    usernameLabel.TextStrokeTransparency = .01
 
     -- Change outline color based on total stats
     local outlineColor
-    if totalStats >= 1e11 then
+    local highlightColor
+    if totalStats >= 1e14 then 
+        highlightColor = Color3.new(1, 0, 1) -- Change color for 100T+
+    elseif totalStats >= 1e13 then 
+        outlineColor = Color3.fromRGB(99, 57, 116) -- Neon Purple
+        highlightColor = Color3.new(0.5, 0, 0.5) -- Royal Purple
+    elseif totalStats >= 1e12 then 
+        outlineColor = Color3.fromRGB(235, 222, 240) -- Light Blue
+        highlightColor = Color3.fromRGB(0, 1, 1) -- Sky Blue
+    elseif totalStats >= 1e11 then
         outlineColor = Color3.fromRGB(255, 105, 180) -- Hot Pink
+        highlightColor = Color3.fromRGB(0, 0, 1) -- Dark Blue
     elseif totalStats >= 1e10 then
-        outlineColor = Color3.fromRGB(165, 105, 189) -- Cyan
+        outlineColor = Color3.fromRGB(195, 155, 211) -- Dark Green
+        highlightColor = Color3.fromRGB(0, 1, 0) -- Green
     elseif totalStats >= 1e9 then
-        outlineColor = Color3.fromRGB(169, 204, 227) -- Dark Blue
+        outlineColor = Color3.fromRGB(169, 204, 227) -- Cyan
+        highlightColor = Color3.fromRGB(0, 1, 1) -- Light Blue
     elseif totalStats >= 1e8 then
         outlineColor = Color3.fromRGB(255, 215, 0) -- Gold
+        highlightColor = Color3.new(1, 1, 0) -- Yellow
     elseif totalStats >= 1e7 then
         outlineColor = Color3.fromRGB(41, 128, 185) -- Dark Green
+        highlightColor = Color3.fromRGB(0.5, 0.5, 0) -- Olive
     elseif totalStats >= 1e6 then
         outlineColor = Color3.fromRGB(133, 193, 233) -- Light Blue
+        highlightColor = Color3.fromRGB(0.8, 0.8, 0.8) -- Gray
     else
         outlineColor = Color3.new(0, 0, 0) -- Default color
+        highlightColor = Color3.new(0, 0, 0) -- Black
     end
 
     -- Update outline color of the username label
+    usernameLabel.TextStrokeTransparency = 0.01 -- Reset stroke transparency
     usernameLabel.TextStrokeColor3 = outlineColor -- Set outline color
 
-    -- If the player's stats are 100T or above, initiate color transition for the text and highlight
-    if totalStats >= 1e14 then
-        local function changeTextColor()
-            while true do
-                for hue = 0, 1, 0.01 do -- Transition through hues
-                    local color = Color3.fromHSV(hue, 1, 1) -- Full saturation and value for bright colors
-                    usernameLabel.TextColor3 = color -- Update text color
-                    wait(0.02) -- Wait for a smoother transition
-                end
-            end
-        end
-
-        local function changeHighlightColor()
-            while true do
-                for hue = 0, 1, 0.01 do -- Transition through hues
-                    local color = Color3.fromHSV(hue, 1, 1) -- Full saturation and value for bright highlight
-                    highlight.FillColor = color -- Update highlight color
-                    wait(0.02) -- Wait for a smoother transition
-                end
-            end
-        end
-
-        -- Start the color change loop for both text and highlight
-        spawn(changeTextColor)
-        spawn(changeHighlightColor)
-    end
+    -- Create a highlight for the character
+    local highlight = highlightTemplate:Clone() -- Clone the template highlight
+    highlight.Parent = character -- Parent it to the character
+    highlight.FillColor = highlightColor -- Set the highlight color
 
     -- Update stats every 0.2 seconds
     while true do
@@ -154,30 +143,55 @@ local function createGUI(character)
             -- Update the username label with the latest stats
             usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
 
-            -- If the player's stats are 100T or above, ensure the color transitions continue
-            if totalStats >= 1e14 then
-                spawn(changeTextColor)
-                spawn(changeHighlightColor)
+            -- Change outline color based on updated total stats
+            if totalStats >= 1e14 then 
+                highlightColor = Color3.new(1, 0, 1) -- Change color for 100T+
+            elseif totalStats >= 1e13 then 
+                outlineColor = Color3.fromRGB(99, 57, 116) -- Neon Purple
+                highlightColor = Color3.new(0.5, 0, 0.5) -- Royal Purple
+            elseif totalStats >= 1e12 then 
+                outlineColor = Color3.fromRGB(235, 222, 240) -- Light Blue
+                highlightColor = Color3.fromRGB(0, 1, 1) -- Sky Blue
+            elseif totalStats >= 1e11 then
+                outlineColor = Color3.fromRGB(255, 105, 180) -- Hot Pink
+                highlightColor = Color3.fromRGB(0, 0, 1) -- Dark Blue
+            elseif totalStats >= 1e10 then
+                outlineColor = Color3.fromRGB(195, 155, 211) -- Dark Green
+                highlightColor = Color3.fromRGB(0, 1, 0) -- Green
+            elseif totalStats >= 1e9 then
+                outlineColor = Color3.fromRGB(169, 204, 227) -- Cyan
+                highlightColor = Color3.fromRGB(0, 1, 1) -- Light Blue
+            elseif totalStats >= 1e8 then
+                outlineColor = Color3.fromRGB(255, 215, 0) -- Gold
+                highlightColor = Color3.new(1, 1, 0) -- Yellow
+            elseif totalStats >= 1e7 then
+                outlineColor = Color3.fromRGB(41, 128, 185) -- Dark Green
+                highlightColor = Color3.fromRGB(0.5, 0.5, 0) -- Olive
+            elseif totalStats >= 1e6 then
+                outlineColor = Color3.fromRGB(133, 193, 233) -- Light Blue
+                highlightColor = Color3.fromRGB(0.8, 0.8, 0.8) -- Gray
             else
-                -- Reset to non-rainbow colors if stats are below 100T
-                usernameLabel.TextColor3 = Color3.new(1, 1, 1)
-                highlight.FillColor = Color3.new(1, 0, 0) -- Reset to red
+                outlineColor = Color3.new(0, 0, 0) -- Default color
+                highlightColor = Color3.new(0, 0, 0) -- Black
             end
-        end
+            
+            -- Update highlight color
+            highlight.FillColor = highlightColor
+            usernameLabel.TextStrokeColor3 = outlineColor -- Update outline color
 
-        wait(0.2) -- Wait for 0.2 seconds before the next update
+            wait(0.2) -- Wait for 0.2 seconds before updating again
+        else
+            break -- Exit loop if player stats not found
+        end
     end
 end
 
--- Function to recreate GUI and highlight
-local function onCharacterAdded(character)
-    createGUI(character) -- Create the GUI for the new character
-end
+-- Listen for player character added
+player.CharacterAdded:Connect(function(character)
+    createGUI(character)
+end)
 
--- Connect to CharacterAdded to create GUI on respawn
-player.CharacterAdded:Connect(onCharacterAdded)
-
--- Create GUI for the initial character, if it exists
+-- Create GUI for existing character if present
 if player.Character then
     createGUI(player.Character)
 end

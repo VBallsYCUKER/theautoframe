@@ -63,8 +63,9 @@ local function createGUI(character)
         -- Calculate the lowest stat
         totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
 
-        -- Fetch player's health
-        local health = character:WaitForChild("Humanoid").Health
+        -- Fetch player's health from Humanoid
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        local health = humanoid and humanoid.Health or 0
 
         -- Add "Owner" tag if the player is one of the specified usernames
         if player.Name == "Steve72009" or player.Name == "Pserson2" or player.Name == "whowhatwhen1230" then
@@ -101,10 +102,10 @@ local function createGUI(character)
         highlightColor = Color3.fromRGB(0, 1, 1) -- Sky Blue
     elseif totalStats >= 1e11 then
         outlineColor = Color3.fromRGB(255, 105, 180) -- Hot Pink
-        highlightColor = Color3.fromRGB(0, 0, 1) -- Dark Blue
+        highlightColor = Color3.new(0, 0, 1) -- Dark Blue
     elseif totalStats >= 1e10 then
         outlineColor = Color3.fromRGB(195, 155, 211) -- Dark Green
-        highlightColor = Color3.fromRGB(0, 1, 0) -- Green
+        highlightColor = Color3.new(0, 1, 0) -- Green
     elseif totalStats >= 1e9 then
         outlineColor = Color3.fromRGB(169, 204, 227) -- Cyan
         highlightColor = Color3.fromRGB(0, 1, 1) -- Light Blue
@@ -150,7 +151,8 @@ local function createGUI(character)
             totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
 
             -- Fetch player's health again
-            health = character:FindFirstChild("Humanoid").Health
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            local health = humanoid and humanoid.Health or 0
 
             -- Update the username label with the latest stats
             usernameLabel.Text = string.format("%s || %s, %d%s, %s HP", 
@@ -160,7 +162,7 @@ local function createGUI(character)
                 ownerTag, 
                 format_number(health))
 
-            -- Change outline color based on updated total stats
+            -- Change outline color based on total stats again
             if totalStats >= 1e14 then 
                 highlightColor = Color3.new(1, 0, 1) -- Change color for 100T+
             elseif totalStats >= 1e13 then 
@@ -171,10 +173,10 @@ local function createGUI(character)
                 highlightColor = Color3.fromRGB(0, 1, 1) -- Sky Blue
             elseif totalStats >= 1e11 then
                 outlineColor = Color3.fromRGB(255, 105, 180) -- Hot Pink
-                highlightColor = Color3.fromRGB(0, 0, 1) -- Dark Blue
+                highlightColor = Color3.new(0, 0, 1) -- Dark Blue
             elseif totalStats >= 1e10 then
                 outlineColor = Color3.fromRGB(195, 155, 211) -- Dark Green
-                highlightColor = Color3.fromRGB(0, 1, 0) -- Green
+                highlightColor = Color3.new(0, 1, 0) -- Green
             elseif totalStats >= 1e9 then
                 outlineColor = Color3.fromRGB(169, 204, 227) -- Cyan
                 highlightColor = Color3.fromRGB(0, 1, 1) -- Light Blue

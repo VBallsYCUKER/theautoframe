@@ -1,7 +1,14 @@
 -- Function to format numbers
 function format_number(number)
-    -- Return the number as a string without abbreviations
-    return tostring(number)
+    local suffixes = {"", "K", "M", "B", "T", "QD"}
+    local suffix_index = 1
+
+    while math.abs(number) >= 1000 and suffix_index < #suffixes do
+        number = number / 1000.0
+        suffix_index = suffix_index + 1
+    end
+
+    return string.format("%.2f%s", number, suffixes[suffix_index])
 end
 
 local player = game:GetService("Players").LocalPlayer
@@ -18,7 +25,7 @@ local function createGUI(character)
     -- Wait for the character's Head to be available
     local head = character:WaitForChild("Head")
 
-    -- Create a BillboardGui for the display name and rebirth count
+    -- Create a BillboardGui for the display name and stats
     local billboardGui = head:FindFirstChild("BillboardGui") or Instance.new("BillboardGui")
     billboardGui.Parent = head
     billboardGui.Size = UDim2.new(0, 200, 0, 50) -- Size of the GUI
@@ -40,11 +47,17 @@ local function createGUI(character)
     -- Fetch player stats from ReplicatedStorage
     local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
     local ownerTag = ""
-    local playerRebirths = 0
+    local totalStats = 0
 
     if playerStats then
-        -- Fetch rebirth data
-        playerRebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
+        -- Fetch the various stats
+        local strengthStat = playerStats:FindFirstChild("Strength") and playerStats.Strength.Value or 0
+        local defenceStat = playerStats:FindFirstChild("Defense") and playerStats.Defense.Value or 0
+        local energyStat = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or 0
+        local speedStat = playerStats:FindFirstChild("Speed") and playerStats.Speed.Value or 0
+
+        -- Calculate total stats
+        totalStats = strengthStat + defenceStat + energyStat + speedStat
 
         -- Add "Owner" tag if the player is one of the specified usernames
         if player.Name == "Steve72009" or player.Name == "Pserson2" then
@@ -54,25 +67,25 @@ local function createGUI(character)
             usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
         end
 
-        -- Format the display name and rebirth count with the owner tag
-        usernameLabel.Text = string.format("%s || %s%s", player.DisplayName, format_number(playerRebirths), ownerTag)
+        -- Format the display name and total stats with the owner tag
+        usernameLabel.Text = string.format("%s || %s%s", player.DisplayName, format_number(totalStats), ownerTag)
     else
         usernameLabel.Text = player.DisplayName -- Fallback if stats not found
     end
 
     usernameLabel.TextStrokeTransparency = .01
 
-    -- Change outline color based on rebirth count
+    -- Change outline color based on total stats
     local outlineColor
-    if playerRebirths >= 1e11 then
+    if totalStats >= 1e11 then
         outlineColor = Color3.fromRGB(255, 105, 180) -- Hot Pink
-    elseif playerRebirths >= 1e10 then
+    elseif totalStats >= 1e10 then
         outlineColor = Color3.fromRGB(0, 255, 255) -- Cyan
-    elseif playerRebirths >= 1e9 then
+    elseif totalStats >= 1e9 then
         outlineColor = Color3.fromRGB(0, 0, 139) -- Dark Blue
-    elseif playerRebirths >= 1e8 then
+    elseif totalStats >= 1e8 then
         outlineColor = Color3.fromRGB(255, 215, 0) -- Gold
-    elseif playerRebirths >= 1e6 then
+    elseif totalStats >= 1e6 then
         outlineColor = Color3.fromRGB(0, 100, 0) -- Dark Green
     else
         outlineColor = Color3.new(0, 0, 0) -- Default to black if below 1M

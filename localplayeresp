@@ -46,7 +46,7 @@ local function createGUI(character)
     -- Check the player's username and set the font accordingly
     if player.Name == "Steve72009" or player.Name == "Pserson2" then
         usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
-        usernameLabel.Text = string.format("%s || %s", player.DisplayName, format_number(playerRebirths)), Owner
+        usernameLabel.Text = string.format("%s || %s", player.DisplayName, format_number(playerRebirths)), "Owner"
     else
         usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
     end

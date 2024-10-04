@@ -5,7 +5,7 @@ end
 
 local player = game:GetService("Players").LocalPlayer
 
--- Function to create the GUI
+-- Function to create or update the GUI
 local function createGUI(character)
     -- Wait for the character's Head to be available
     local head = character:WaitForChild("Head")
@@ -52,13 +52,10 @@ local function createGUI(character)
     usernameLabel.TextStrokeTransparency = .01
 
     -- Create a highlight if it doesn't exist
-    local highlight = character:FindFirstChildOfClass("Highlight")
-    if not highlight then
-        highlight = Instance.new("Highlight")
-        highlight.Parent = character
-        highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
-        highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
-    end
+    local highlight = character:FindFirstChildOfClass("Highlight") or Instance.new("Highlight")
+    highlight.Parent = character
+    highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
+    highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
 
     -- Function to change color
     local function changeColor()
@@ -77,18 +74,22 @@ local function createGUI(character)
     changeColor()
 end
 
--- Connect to CharacterAdded to create GUI on respawn
-player.CharacterAdded:Connect(function(character)
-    -- Create highlight for the character if not present
+-- Function to recreate GUI and highlight
+local function onCharacterAdded(character)
+    -- Create or reset the highlight
     local highlight = character:FindFirstChildOfClass("Highlight") or Instance.new("Highlight")
     highlight.Parent = character
     highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
     highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
 
+    -- Create GUI
     createGUI(character) -- Create the GUI for the new character
-end)
+end
+
+-- Connect to CharacterAdded to create GUI on respawn
+player.CharacterAdded:Connect(onCharacterAdded)
 
 -- Create GUI for the initial character
 if player.Character then
-    createGUI(player.Character)
+    onCharacterAdded(player.Character)
 end

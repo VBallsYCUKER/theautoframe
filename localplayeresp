@@ -49,73 +49,65 @@ local function createGUI(character)
     local ownerTag = ""
     local totalStats = 0
 
-    if playerStats then
-        -- Fetch the various stats
-        local strengthStat = playerStats:FindFirstChild("Strength") and playerStats.Strength.Value or 0
-        local defenceStat = playerStats:FindFirstChild("Defense") and playerStats.Defense.Value or 0
-        local energyStat = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or 0
-        local speedStat = playerStats:FindFirstChild("Speed") and playerStats.Speed.Value or 0
+    local function updateStats()
+        if playerStats then
+            -- Fetch the various stats
+            local strengthStat = playerStats:FindFirstChild("Strength") and playerStats.Strength.Value or 0
+            local defenceStat = playerStats:FindFirstChild("Defense") and playerStats.Defense.Value or 0
+            local energyStat = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or 0
+            local speedStat = playerStats:FindFirstChild("Speed") and playerStats.Speed.Value or 0
 
-        -- Calculate total stats
-        totalStats = strengthStat + defenceStat + energyStat + speedStat
+            -- Calculate total stats
+            totalStats = strengthStat + defenceStat + energyStat + speedStat
 
-        -- Add "Owner" tag if the player is one of the specified usernames
-        if player.Name == "Steve72009" or player.Name == "Pserson2" or player.Name == "whowhatwhen1230" then
-            ownerTag = " || Owner 🗿"
-            usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
+            -- Add "Owner" tag if the player is one of the specified usernames
+            if player.Name == "Steve72009" or player.Name == "Pserson2" or player.Name == "whowhatwhen1230" then
+                ownerTag = " || Owner 🗿"
+                usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
+            else
+                usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
+            end
+
+            -- Format the display name and total stats with the owner tag
+            usernameLabel.Text = string.format("%s || %s%s", player.DisplayName, format_number(totalStats), ownerTag)
         else
-            usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
+            usernameLabel.Text = player.DisplayName -- Fallback if stats not found
         end
 
-        -- Format the display name and total stats with the owner tag
-        usernameLabel.Text = string.format("%s || %s%s", player.DisplayName, format_number(totalStats), ownerTag)
-    else
-        usernameLabel.Text = player.DisplayName -- Fallback if stats not found
+        usernameLabel.TextStrokeTransparency = .01
+
+        -- Change outline color based on total stats
+        local outlineColor
+        if totalStats >= 1e11 then
+            outlineColor = Color3.fromRGB(255, 105, 180)
+        elseif totalStats >= 1e10 then
+            outlineColor = Color3.fromRGB(165, 105, 189)
+        elseif totalStats >= 1e9 then
+            outlineColor = Color3.fromRGB(169, 204, 227)
+        elseif totalStats >= 1e8 then
+            outlineColor = Color3.fromRGB(255, 215, 0)
+        elseif totalStats >= 1e7 then
+            outlineColor = Color3.fromRGB(41, 128, 185)
+        elseif totalStats >= 1e6 then
+            outlineColor = Color3.fromRGB(133, 193, 233)
+        else
+            outlineColor = Color3.new(171, 235, 198)
+        end
+
+        -- Update outline color of the username label
+        usernameLabel.TextStrokeTransparency = 0.01 -- Reset stroke transparency
+        usernameLabel.TextStrokeColor3 = outlineColor -- Set outline color
     end
 
-    usernameLabel.TextStrokeTransparency = .01
-
-    -- Change outline color based on total stats
-    local outlineColor
-    if totalStats >= 1e11 then
-        outlineColor = Color3.fromRGB(255, 105, 180)
-    elseif totalStats >= 1e10 then
-        outlineColor = Color3.fromRGB(165, 105, 189)
-    elseif totalStats >= 1e9 then
-        outlineColor = Color3.fromRGB(169, 204, 227)
-    elseif totalStats >= 1e8 then
-        outlineColor = Color3.fromRGB(255, 215, 0)
-    elseif totalStats >= 1e7 then
-        outlineColor = Color3.fromRGB(41, 128, 185)
-    elseif totalStats >= 1e6 then
-        outlineColor = Color3.fromRGB(133, 193, 233)
-    else
-        outlineColor = Color3.new(171, 235, 198)
+    -- Continuously update stats every 0.2 seconds
+    while true do
+        updateStats()
+        wait(0.2) -- Update every 0.2 seconds
     end
-
-    -- Update outline color of the username label
-    usernameLabel.TextStrokeTransparency = 0.01 -- Reset stroke transparency
-    usernameLabel.TextStrokeColor3 = outlineColor -- Set outline color
 
     -- Create a highlight for the character
     local highlight = highlightTemplate:Clone() -- Clone the template highlight
     highlight.Parent = character -- Parent it to the character
-
-    -- Function to change color
-    local function changeColor()
-        while true do
-            for hue = 0, 1, 0.01 do -- Transition through hues
-                local color = Color3.fromHSV(hue, 1, 1) -- Full saturation and value for bright colors
-                highlight.FillColor = color -- Update highlight color
-                usernameLabel.TextColor3 = color -- Update text color
-                usernameLabel.TextStrokeTransparency = .01 -- Reset stroke transparency
-                wait(0.02) -- Wait for a smoother transition
-            end
-        end
-    end
-
-    -- Start changing colors
-    changeColor()
 end
 
 -- Function to recreate GUI and highlight

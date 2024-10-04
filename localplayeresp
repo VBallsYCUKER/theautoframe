@@ -123,7 +123,7 @@ local function createGUI(character)
             if totalStats >= 1e11 then
                 outlineColor = Color3.fromRGB(255, 105, 180) -- Hot Pink
             elseif totalStats >= 1e10 then
-                outlineColor = Color3.fromRGB(165, 105, 189) -- Cyan
+                outlineColor = Color3.fromRGB(192, 57, 43) -- Cyan
             elseif totalStats >= 1e9 then
                 outlineColor = Color3.fromRGB(169, 204, 227) -- Dark Blue
             elseif totalStats >= 1e8 then

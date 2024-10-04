@@ -900,7 +900,7 @@ local function autostack(stack1)
             repeat
                 Remote:InvokeServer(unpack(Arguments))
                 i = i + 1
-                task.wait(.1)
+                task.wait()
             until i == 8
             task.wait()
             getgenv().stackneeded = false
@@ -1105,7 +1105,7 @@ while true do
                             repeat
                                 Remote:InvokeServer(unpack(Arguments))
                                 i = i + 1
-                                task.wait(.1)
+                                task.wait()
                             until i == 8
                             task.wait()
                             getgenv().stackneeded = false
@@ -1443,7 +1443,7 @@ end
                                                          
                                                         end
                                                         spam = spam + 1
-                                                        wait(.1)
+                                                        wait()
                                                     end) 
                                                     until spam == 10 or
                                                     game.Players.LocalPlayer.Character.Humanoid.Health <= 0

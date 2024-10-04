@@ -1,22 +1,17 @@
--- Variables 
-local player = game.Players.LocalPlayer
+function format_number(number)
+    -- Return the number as a string without abbreviations
+    return tostring(number)
+end
+
+local player = game:GetService("Players").LocalPlayer
 
 -- Function to create the GUI
 local function createGUI(character)
     -- Wait for the character's Head to be available
     local head = character:WaitForChild("Head")
 
-    -- Check if a highlight already exists
-    local highlight = character:FindFirstChildOfClass("Highlight")
-    if not highlight then
-        highlight = Instance.new("Highlight")
-        highlight.Parent = character
-        highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
-        highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
-    end
-
-    -- Create a BillboardGui for the display name
-    local billboardGui = character:FindFirstChild("BillboardGui") or Instance.new("BillboardGui")
+    -- Create a BillboardGui for the display name and rebirth count
+    local billboardGui = head:FindFirstChild("BillboardGui") or Instance.new("BillboardGui")
     billboardGui.Parent = head
     billboardGui.Size = UDim2.new(0, 200, 0, 50) -- Size of the GUI
     billboardGui.StudsOffset = Vector3.new(0, 2, 0) -- Position above the head
@@ -30,9 +25,22 @@ local function createGUI(character)
     usernameLabel.Size = UDim2.new(1, 0, 1, 0) -- Fill the BillboardGui
     usernameLabel.BackgroundTransparency = 1 -- Make background transparent
     usernameLabel.TextColor3 = Color3.new(1, 1, 1) -- Initial text color (white)
-    usernameLabel.TextScaled = true -- Scale text to fit the label
-    usernameLabel.Text = player.DisplayName -- Set text to the player's display name
-    usernameLabel.TextStrokeTransparency = 0.01
+    usernameLabel.TextScaled = false -- Disable scaling to set a fixed size
+    usernameLabel.TextSize = 20 -- Set the desired text size (adjust as needed)
+    usernameLabel.TextWrapped = false -- Ensure the text stays on one line
+    usernameLabel.TextTruncate = Enum.TextTruncate.AtEnd -- Truncate if the text is too long
+
+    -- Fetch player stats from ReplicatedStorage
+    local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
+    if playerStats then
+        -- Fetch rebirth data
+        local playerRebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
+
+        -- Format the display name and rebirth count
+        usernameLabel.Text = string.format("%s || %s", player.DisplayName, format_number(playerRebirths))
+    else
+        usernameLabel.Text = player.DisplayName -- Fallback if stats not found
+    end
 
     -- Check the player's username and set the font accordingly
     if player.Name == "Steve72009" or player.Name == "Pserson2" then
@@ -41,8 +49,16 @@ local function createGUI(character)
         usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
     end
 
-    -- Set TextStrokeTransparency to ensure it remains after respawn
     usernameLabel.TextStrokeTransparency = .01
+
+    -- Create a highlight if it doesn't exist
+    local highlight = character:FindFirstChildOfClass("Highlight")
+    if not highlight then
+        highlight = Instance.new("Highlight")
+        highlight.Parent = character
+        highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
+        highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+    end
 
     -- Function to change color
     local function changeColor()
@@ -62,7 +78,15 @@ local function createGUI(character)
 end
 
 -- Connect to CharacterAdded to create GUI on respawn
-player.CharacterAdded:Connect(createGUI)
+player.CharacterAdded:Connect(function(character)
+    -- Create highlight for the character if not present
+    local highlight = character:FindFirstChildOfClass("Highlight") or Instance.new("Highlight")
+    highlight.Parent = character
+    highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
+    highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+
+    createGUI(character) -- Create the GUI for the new character
+end)
 
 -- Create GUI for the initial character
 if player.Character then

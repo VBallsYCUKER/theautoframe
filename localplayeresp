@@ -32,6 +32,7 @@ local function createGUI(character)
     usernameLabel.TextColor3 = Color3.new(1, 1, 1) -- Initial text color (white)
     usernameLabel.TextScaled = true -- Scale text to fit the label
     usernameLabel.Text = player.DisplayName -- Set text to the player's display name
+    usernameLabel.TextStrokeTransparency = 0.01
 
     -- Check the player's username and set the font accordingly
     if player.Name == "Steve72009" or player.Name == "Pserson2" then

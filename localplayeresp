@@ -51,6 +51,9 @@ local function createGUI(character)
     local rebirths = 0 -- Default rebirths
 
     if playerStats then
+        -- Fetch rebirth data
+        local playerRebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
+
         -- Fetch the various stats
         local strengthStat = playerStats:FindFirstChild("Strength") and playerStats.Strength.Value or math.huge
         local defenceStat = playerStats:FindFirstChild("Defense") and playerStats.Defense.Value or math.huge
@@ -59,9 +62,6 @@ local function createGUI(character)
 
         -- Calculate the lowest stat
         totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
-
-        -- Fetch rebirths
-        rebirths = playerStats:FindFirstChild("Rebirths") and playerStats.Rebirths.Value or 0
 
         -- Add "Owner" tag if the player is one of the specified usernames
         if player.Name == "Steve72009" or player.Name == "Pserson2" or player.Name == "whowhatwhen1230" then
@@ -72,7 +72,7 @@ local function createGUI(character)
         end
 
         -- Format the display name and total stats with the rebirths and owner tag
-        usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), rebirths, ownerTag)
+        usernameLabel.Text = string.format("%s || %s, %s%s", player.DisplayName, format_number(totalStats), format_number(playerRebirths), ownerTag)
     else
         usernameLabel.Text = player.DisplayName -- Fallback if stats not found
     end
@@ -93,8 +93,8 @@ local function createGUI(character)
         outlineColor = Color3.fromRGB(41, 128, 185) -- Dark Green
     elseif totalStats >= 1e6 then
         outlineColor = Color3.fromRGB(133, 193, 233) -- Light Blue
-    else
-        outlineColor = Color3.new(171, 235, 198) -- Default color
+    elseif totalStats >= 1e5 then
+        outlineColor = Color3.new(23, 32, 42) -- Default color
     end
 
     -- Update outline color of the username label
@@ -111,6 +111,9 @@ local function createGUI(character)
         playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
 
         if playerStats then
+            -- Fetch rebirth data again
+            playerRebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
+
             -- Fetch the various stats again
             strengthStat = playerStats:FindFirstChild("Strength") and playerStats.Strength.Value or math.huge
             defenceStat = playerStats:FindFirstChild("Defense") and playerStats.Defense.Value or math.huge
@@ -120,11 +123,8 @@ local function createGUI(character)
             -- Calculate the lowest stat again
             totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
 
-            -- Fetch rebirths again
-            rebirths = playerStats:FindFirstChild("Rebirths") and playerStats.Rebirths.Value or 0
-
             -- Update the username label with the latest stats
-            usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), rebirths, ownerTag)
+            usernameLabel.Text = string.format("%s || %s, %s%s", player.DisplayName, format_number(totalStats), format_number(playerRebirths), ownerTag)
 
             -- Change outline color based on updated total stats
             if totalStats >= 1e11 then

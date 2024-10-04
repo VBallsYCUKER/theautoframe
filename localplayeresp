@@ -6,7 +6,7 @@ local function createGUI(character)
     -- Create a BillboardGui for the display name and rebirth count
     local billboardGui = head:FindFirstChild("BillboardGui") or Instance.new("BillboardGui")
     billboardGui.Parent = head
-    billboardGui.Size = UDim2.new(0, 300, 0, 50) -- Increased width of the GUI
+    billboardGui.Size = UDim2.new(0, 400, 0, 50) -- Increased width of the GUI to 400
     billboardGui.StudsOffset = Vector3.new(0, 2, 0) -- Position above the head
     billboardGui.Adornee = head -- Set the object it will be attached to
     billboardGui.AlwaysOnTop = true -- Keep it always on top
@@ -19,8 +19,8 @@ local function createGUI(character)
     usernameLabel.BackgroundTransparency = 1 -- Make background transparent
     usernameLabel.TextColor3 = Color3.new(1, 1, 1) -- Initial text color (white)
     usernameLabel.TextScaled = false -- Disable scaling to set a fixed size
-    usernameLabel.TextSize = 20 -- Set the desired text size (adjust as needed)
-    usernameLabel.TextWrapped = true -- Allow text wrapping to prevent truncation
+    usernameLabel.TextSize = 18 -- Set the desired text size (adjusted to 18)
+    usernameLabel.TextWrapped = false -- Disable text wrapping
     usernameLabel.TextTruncate = Enum.TextTruncate.None -- Disable truncation
 
     -- Fetch player stats from ReplicatedStorage

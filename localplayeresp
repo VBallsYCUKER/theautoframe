@@ -33,21 +33,24 @@ local function createGUI(character)
 
     -- Fetch player stats from ReplicatedStorage
     local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
+    local ownerTag = ""
+
     if playerStats then
         -- Fetch rebirth data
         local playerRebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
 
-        -- Format the display name and rebirth count
-        usernameLabel.Text = string.format("%s || %s", player.DisplayName, format_number(playerRebirths))
+        -- Add "Owner" tag if the player is one of the specified usernames
+        if player.Name == "Steve72009" or player.Name == "Pserson2" then
+            ownerTag = " (Owner)"
+            usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
+        else
+            usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
+        end
+
+        -- Format the display name and rebirth count with the owner tag
+        usernameLabel.Text = string.format("%s || %s%s", player.DisplayName, format_number(playerRebirths), ownerTag)
     else
         usernameLabel.Text = player.DisplayName -- Fallback if stats not found
-    end
-
-    -- Check the player's username and set the font accordingly
-    if player.Name == "Steve72009" or player.Name == "Pserson2" then
-        usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
-    else
-        usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
     end
 
     usernameLabel.TextStrokeTransparency = .01

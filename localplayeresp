@@ -3,6 +3,9 @@ local player = game.Players.LocalPlayer
 
 -- Function to create the GUI
 local function createGUI(character)
+	-- Wait for the character's Head to be available
+	local head = character:WaitForChild("Head")
+
 	-- Check if a highlight already exists
 	local highlight = character:FindFirstChildOfClass("Highlight")
 	if not highlight then
@@ -14,10 +17,10 @@ local function createGUI(character)
 
 	-- Create a BillboardGui for the display name
 	local billboardGui = character:FindFirstChild("BillboardGui") or Instance.new("BillboardGui")
-	billboardGui.Parent = character:FindFirstChild("Head")
+	billboardGui.Parent = head
 	billboardGui.Size = UDim2.new(0, 200, 0, 50) -- Size of the GUI
 	billboardGui.StudsOffset = Vector3.new(0, 2, 0) -- Position above the head
-	billboardGui.Adornee = character:WaitForChild("Head") -- Set the object it will be attached to
+	billboardGui.Adornee = head -- Set the object it will be attached to
 	billboardGui.AlwaysOnTop = true -- Keep it always on top
 
 	-- Create or reuse the TextLabel

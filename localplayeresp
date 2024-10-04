@@ -1,56 +1,64 @@
--- Variables
+-- Variables 
 local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local highlight = Instance.new("Highlight")
-local usernameLabel = Instance.new("TextLabel")
 
--- Set up the Highlight
-highlight.Parent = character
-highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
-highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+-- Function to create the GUI
+local function createGUI(character)
+    -- Check if a highlight already exists
+    local highlight = character:FindFirstChildOfClass("Highlight")
+    if not highlight then
+        highlight = Instance.new("Highlight")
+        highlight.Parent = character
+        highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
+        highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+    end
 
--- Set up the TextLabel
-usernameLabel.Parent = character:WaitForChild("Head")
-usernameLabel.Size = UDim2.new(1, 0, 0, 50) -- Adjust the size as needed
-usernameLabel.Position = UDim2.new(0, 0, -1.5, 0) -- Position above the head
-usernameLabel.BackgroundTransparency = 1 -- Make background transparent
-usernameLabel.TextColor3 = Color3.new(1, 1, 1) -- Initial text color (white)
-usernameLabel.TextScaled = true -- Scale text to fit the label
-usernameLabel.Text = player.Name -- Set text to the player's username
+    -- Create a BillboardGui for the display name
+    local billboardGui = character:FindFirstChild("BillboardGui") or Instance.new("BillboardGui")
+    billboardGui.Parent = character:FindFirstChild("Head")
+    billboardGui.Size = UDim2.new(0, 200, 0, 50) -- Size of the GUI
+    billboardGui.StudsOffset = Vector3.new(0, 2, 0) -- Position above the head
+    billboardGui.Adornee = character:WaitForChild("Head") -- Set the object it will be attached to
+    billboardGui.AlwaysOnTop = true -- Keep it always on top
 
--- Function to change color
-local function changeColor()
-    while true do
-        for i = 0, 1, 0.01 do
-            highlight.FillColor = Color3.fromRGB(math.floor(255 * i), math.floor(255 * (1 - i)), 0) -- Transition from red to green
-            usernameLabel.TextColor3 = Color3.fromRGB(math.floor(255 * i), math.floor(255 * (1 - i)), 0) -- Update text color
-            wait(0.05)
-        end
-        for i = 0, 1, 0.01 do
-            highlight.FillColor = Color3.fromRGB(math.floor(255 * (1 - i)), math.floor(255 * i), 0) -- Transition from green to yellow
-            usernameLabel.TextColor3 = Color3.fromRGB(math.floor(255 * (1 - i)), math.floor(255 * i), 0) -- Update text color
-            wait(0.05)
-        end
-        for i = 0, 1, 0.01 do
-            highlight.FillColor = Color3.fromRGB(0, math.floor(255 * (1 - i)), math.floor(255 * i)) -- Transition from yellow to blue
-            usernameLabel.TextColor3 = Color3.fromRGB(0, math.floor(255 * (1 - i)), math.floor(255 * i)) -- Update text color
-            wait(0.05)
-        end
-        for i = 0, 1, 0.01 do
-            highlight.FillColor = Color3.fromRGB(0, math.floor(255 * i), math.floor(255 * (1 - i))) -- Transition from blue to red
-            usernameLabel.TextColor3 = Color3.fromRGB(0, math.floor(255 * i), math.floor(255 * (1 - i))) -- Update text color
-            wait(0.05)
+    -- Create or reuse the TextLabel
+    local usernameLabel = billboardGui:FindFirstChild("UsernameLabel") or Instance.new("TextLabel")
+    usernameLabel.Name = "UsernameLabel" -- Set name for easy reference
+    usernameLabel.Parent = billboardGui
+    usernameLabel.Size = UDim2.new(1, 0, 1, 0) -- Fill the BillboardGui
+    usernameLabel.BackgroundTransparency = 1 -- Make background transparent
+    usernameLabel.TextColor3 = Color3.new(1, 1, 1) -- Initial text color (white)
+    usernameLabel.TextScaled = true -- Scale text to fit the label
+    usernameLabel.Text = player.DisplayName -- Set text to the player's display name
+
+    -- Check the player's username and set the font accordingly
+    if player.Name == "Steve72009" or player.Name == "Pserson2" then
+        usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
+    else
+        usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
+    end
+
+    usernameLabel.TextStrokeTransparency = .01
+
+    -- Function to change color
+    local function changeColor()
+        while true do
+            for hue = 0, 1, 0.01 do -- Transition through hues
+                local color = Color3.fromHSV(hue, 1, 1) -- Full saturation and value for bright colors
+                highlight.FillColor = color -- Update highlight color
+                usernameLabel.TextColor3 = color -- Update text color
+                wait(0.02) -- Wait for a smoother transition
+            end
         end
     end
+
+    -- Start changing colors
+    changeColor()
 end
 
--- Start changing colors
-changeColor()
+-- Connect to CharacterAdded to create GUI on respawn
+player.CharacterAdded:Connect(createGUI)
 
--- Ensure the label stays above the head
-while true do
-    wait(0.1) -- Update position every 0.1 seconds
-    if character and character:FindFirstChild("Head") then
-        usernameLabel.Position = UDim2.new(0, 0, -1.5, 0) -- Adjusted position relative to the head
-    end
+-- Create GUI for the initial character
+if player.Character then
+    createGUI(player.Character)
 end

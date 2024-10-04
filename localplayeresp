@@ -63,6 +63,9 @@ local function createGUI(character)
         -- Calculate the lowest stat
         totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
 
+        -- Fetch player's health
+        local health = character:WaitForChild("Humanoid").Health
+
         -- Add "Owner" tag if the player is one of the specified usernames
         if player.Name == "Steve72009" or player.Name == "Pserson2" or player.Name == "whowhatwhen1230" then
             ownerTag = " || Script Creator"
@@ -71,8 +74,14 @@ local function createGUI(character)
             usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
         end
 
-        -- Format the display name and total stats with the exact rebirths and owner tag
-        usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
+        -- Format the display name, total stats, rebirths, and health
+        usernameLabel.Text = string.format("%s || %s, %d%s, %s HP", 
+            player.DisplayName, 
+            format_number(totalStats), 
+            playerRebirths, 
+            ownerTag, 
+            format_number(health))
+
     else
         usernameLabel.Text = player.DisplayName -- Fallback if stats not found
     end
@@ -140,8 +149,16 @@ local function createGUI(character)
             -- Calculate the lowest stat again
             totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
 
+            -- Fetch player's health again
+            health = character:FindFirstChild("Humanoid").Health
+
             -- Update the username label with the latest stats
-            usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
+            usernameLabel.Text = string.format("%s || %s, %d%s, %s HP", 
+                player.DisplayName, 
+                format_number(totalStats), 
+                playerRebirths, 
+                ownerTag, 
+                format_number(health))
 
             -- Change outline color based on updated total stats
             if totalStats >= 1e14 then 
@@ -174,24 +191,21 @@ local function createGUI(character)
                 outlineColor = Color3.new(0, 0, 0) -- Default color
                 highlightColor = Color3.new(0, 0, 0) -- Black
             end
-            
-            -- Update highlight color
-            highlight.FillColor = highlightColor
-            usernameLabel.TextStrokeColor3 = outlineColor -- Update outline color
 
-            wait(0.2) -- Wait for 0.2 seconds before updating again
-        else
-            break -- Exit loop if player stats not found
+            -- Update outline color of the username label
+            usernameLabel.TextStrokeTransparency = 0.01 -- Reset stroke transparency
+            usernameLabel.TextStrokeColor3 = outlineColor -- Set outline color
+
+            -- Update highlight color for the character
+            highlight.FillColor = highlightColor -- Set the highlight color
         end
+
+        wait(0.2) -- Update every 0.2 seconds
     end
 end
 
--- Listen for player character added
-player.CharacterAdded:Connect(function(character)
-    createGUI(character)
-end)
-
--- Create GUI for existing character if present
+-- Connect the function to player character added event
+player.CharacterAdded:Connect(createGUI)
 if player.Character then
-    createGUI(player.Character)
+    createGUI(player.Character) -- Call immediately if the character is already loaded
 end

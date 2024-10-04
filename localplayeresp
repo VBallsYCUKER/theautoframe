@@ -40,10 +40,11 @@ local function createGUI(character)
     -- Fetch player stats from ReplicatedStorage
     local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
     local ownerTag = ""
+    local playerRebirths = 0
 
     if playerStats then
         -- Fetch rebirth data
-        local playerRebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
+        playerRebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
 
         -- Add "Owner" tag if the player is one of the specified usernames
         if player.Name == "Steve72009" or player.Name == "Pserson2" then
@@ -60,6 +61,26 @@ local function createGUI(character)
     end
 
     usernameLabel.TextStrokeTransparency = .01
+
+    -- Change outline color based on rebirth count
+    local outlineColor
+    if playerRebirths >= 1e11 then
+        outlineColor = Color3.fromRGB(255, 105, 180) -- Hot Pink
+    elseif playerRebirths >= 1e10 then
+        outlineColor = Color3.fromRGB(0, 255, 255) -- Cyan
+    elseif playerRebirths >= 1e9 then
+        outlineColor = Color3.fromRGB(0, 0, 139) -- Dark Blue
+    elseif playerRebirths >= 1e8 then
+        outlineColor = Color3.fromRGB(255, 215, 0) -- Gold
+    elseif playerRebirths >= 1e6 then
+        outlineColor = Color3.fromRGB(0, 100, 0) -- Dark Green
+    else
+        outlineColor = Color3.new(0, 0, 0) -- Default to black if below 1M
+    end
+
+    -- Update outline color of the username label
+    usernameLabel.TextStrokeTransparency = 0.01 -- Reset stroke transparency
+    usernameLabel.TextStrokeColor3 = outlineColor -- Set outline color
 
     -- Create a highlight for the character
     local highlight = highlightTemplate:Clone() -- Clone the template highlight

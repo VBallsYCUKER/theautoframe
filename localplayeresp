@@ -29,7 +29,6 @@ local function createGUI(character)
     usernameLabel.TextScaled = false -- Disable scaling to set a fixed size
     usernameLabel.TextSize = 20 -- Set the desired text size (adjust as needed)
     usernameLabel.TextWrapped = false -- Ensure the text stays on one line
-    usernameLabel.TextTruncate = Enum.TextTruncate.AtEnd -- Truncate if the text is too long
 
     -- Fetch player stats from ReplicatedStorage
     local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))

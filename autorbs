@@ -688,12 +688,12 @@ local quests = {{
     name = "SSJG Kakata",
     nickname = "SSJG Kakata",
     requiredValue = 100000000,
-    endRange = 200000000,
+    endRange = 150000000,
     planet = "Earth"
 }, {
     name = "Vegetable (GoD in-training)",
     nickname = "Vegetable (GoD in-training)",
-    requiredValue = 200000001,
+    requiredValue = 150000001,
     endRange = 210000000,
     planet = "Bills"
 }, {
@@ -705,7 +705,7 @@ local quests = {{
 }, {
     name = "Vills (50%)",
     nickname = "Vills (50%)",
-    requiredValue = 600000001,
+    requiredValue = 300000001,
     endRange = 250000000,
     planet = "Bills"
 }, {

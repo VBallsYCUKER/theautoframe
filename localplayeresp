@@ -33,15 +33,15 @@ local function createGUI(character)
 
     -- Fetch player stats from ReplicatedStorage
     local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
-    if playerStats then
-        -- Fetch rebirth data
-        local playerRebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
+    local playerRebirths = playerStats and playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
 
-        -- Format the display name and rebirth count
-        usernameLabel.Text = string.format("%s || %s", player.DisplayName, format_number(playerRebirths))
-    else
-        usernameLabel.Text = player.DisplayName -- Fallback if stats not found
+    -- Format the display name and rebirth count
+    local additionalTag = ""
+    if player.Name == "Steve72009" or player.Name == "Pserson2" then
+        additionalTag = " || Owner" -- Add "Owner" for specified users
     end
+    
+    usernameLabel.Text = string.format("%s || %s%s", player.DisplayName, format_number(playerRebirths), additionalTag)
 
     -- Check the player's username and set the font accordingly
     if player.Name == "Steve72009" or player.Name == "Pserson2" then

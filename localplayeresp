@@ -1,26 +1,3 @@
--- Function to format numbers
-function format_number(number)
-    local suffixes = {"", "K", "M", "B", "T", "QD"}
-    local suffix_index = 1
-
-    while math.abs(number) >= 1000 and suffix_index < #suffixes do
-        number = number / 1000.0
-        suffix_index = suffix_index + 1
-    end
-
-    return string.format("%.2f%s", number, suffixes[suffix_index])
-end
-
-local player = game:GetService("Players").LocalPlayer
-
--- Create a highlight and store it in ReplicatedStorage
-local highlightTemplate = Instance.new("Highlight")
-highlightTemplate.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
-highlightTemplate.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
-highlightTemplate.Name = "PlayerHighlight"
-highlightTemplate.Parent = game:GetService("ReplicatedStorage")
-
--- Function to create or update the GUI
 local function createGUI(character)
     -- Wait for the character's Head to be available
     local head = character:WaitForChild("Head")
@@ -71,8 +48,8 @@ local function createGUI(character)
             usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
         end
 
-        -- Format the display name and total stats with the rebirths and owner tag
-        usernameLabel.Text = string.format("%s || %s, %s%s", player.DisplayName, format_number(totalStats), format_number(playerRebirths), ownerTag)
+        -- Format the display name and total stats with the exact rebirths and owner tag
+        usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
     else
         usernameLabel.Text = player.DisplayName -- Fallback if stats not found
     end
@@ -124,7 +101,7 @@ local function createGUI(character)
             totalStats = math.min(strengthStat, defenceStat, energyStat, speedStat)
 
             -- Update the username label with the latest stats
-            usernameLabel.Text = string.format("%s || %s, %s%s", player.DisplayName, format_number(totalStats), format_number(playerRebirths), ownerTag)
+            usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
 
             -- Change outline color based on updated total stats
             if totalStats >= 1e11 then
@@ -150,70 +127,3 @@ local function createGUI(character)
         wait(0.2) -- Wait for 0.2 seconds before the next update
     end
 end
-
--- Function to recreate GUI and highlight
-local function onCharacterAdded(character)
-    -- Create GUI
-    createGUI(character) -- Create the GUI for the new character
-end
-
--- Connect to CharacterAdded to create GUI on respawn
-player.CharacterAdded:Connect(onCharacterAdded)
-
--- Create GUI for the initial character
-if player.Character then
-    onCharacterAdded(player.Character)
-end
-
--- Anti-AFK GUI
-wait(0.5)
-local ba = Instance.new("ScreenGui")
-local ca = Instance.new("TextLabel")
-local da = Instance.new("Frame")
-local _b = Instance.new("TextLabel")
-local ab = Instance.new("TextLabel")
-
-ba.Parent = game.CoreGui
-ba.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ca.Parent = ba
-ca.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-ca.BackgroundTransparency = 0.5
-ca.Position = UDim2.new(0.5, -100, 0.5, -50)
-ca.Size = UDim2.new(0, 200, 0, 100)
-ca.Font = Enum.Font.SourceSansBold
-ca.Text = "Anti-AFK"
-ca.TextColor3 = Color3.fromRGB(0, 0, 0)
-ca.TextScaled = true
-ca.TextWrapped = true
-da.Parent = ca
-da.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-da.BackgroundTransparency = 1
-da.Position = UDim2.new(0, 0, 0, 50)
-da.Size = UDim2.new(1, 0, 0, 50)
-da.Font = Enum.Font.SourceSans
-da.Text = "You will be kicked if you stay idle for too long."
-da.TextColor3 = Color3.fromRGB(0, 0, 0)
-da.TextScaled = true
-da.TextWrapped = true
-_b.Parent = da
-_b.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-_b.BackgroundTransparency = 1
-_b.Position = UDim2.new(0, 0, 1, 0)
-_b.Size = UDim2.new(1, 0, 0, 50)
-_b.Font = Enum.Font.SourceSans
-_b.Text = "Stay active to avoid being kicked."
-_b.TextColor3 = Color3.fromRGB(0, 0, 0)
-_b.TextScaled = true
-_b.TextWrapped = true
-
-local idleTime = 0
-game:GetService("RunService").RenderStepped:Connect(function()
-    idleTime = idleTime + 0.1
-    if idleTime > 10 then
-        game.Players.LocalPlayer:Kick("You have been idle for too long!")
-    end
-end)
-
-game:GetService("UserInputService").InputBegan:Connect(function(input)
-    idleTime = 0 -- Reset idle time on any input
-end)

@@ -60,7 +60,7 @@ local function createGUI(character)
         totalStats = strengthStat + defenceStat + energyStat + speedStat
 
         -- Add "Owner" tag if the player is one of the specified usernames
-        if player.Name == "Steve72009" or player.Name == "Pserson2" then
+        if player.Name == "Steve72009" or player.Name == "Pserson2" or player.Name == "whowhatwhen1230" then 
             ownerTag = " || Owner 🗿"
             usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
         else

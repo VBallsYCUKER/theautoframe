@@ -49,7 +49,7 @@ local function createGUI(character)
         end
 
         -- Format the display name and total stats with the exact rebirths and owner tag
-        usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
+        usernameLabel.Text = usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
     else
         usernameLabel.Text = player.DisplayName -- Fallback if stats not found
     end

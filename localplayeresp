@@ -127,7 +127,13 @@ local function createGUI(character)
             usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
 
             -- Change outline color based on updated total stats
-            if totalStats >= 1e11 then
+            if totalStats >= 1e13 then 
+                outlineColor = Color3.fromRGB(99, 57, 116)
+            elseif totalStats >= 1e12 then 
+                outlineColor = Color3.fromRGB(235, 222, 240)
+            elseif totalStats >= 5e11 then 
+                outlineColor = Color3.fromRGB(235, 222, 240)
+            elseif totalStats >= 1e11 then
                 outlineColor = Color3.fromRGB(255, 105, 180) -- Hot Pink
             elseif totalStats >= 5e10 then
                 outlineColor = Color3.fromRGB(195, 155, 211)

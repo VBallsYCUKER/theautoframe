@@ -98,22 +98,6 @@ local function createGUI(character)
     -- Create a highlight for the character
     local highlight = highlightTemplate:Clone() -- Clone the template highlight
     highlight.Parent = character -- Parent it to the character
-
-    -- Function to change color
-    local function changeColor()
-        while true do
-            for hue = 0, 1, 0.01 do -- Transition through hues
-                local color = Color3.fromHSV(hue, 1, 1) -- Full saturation and value for bright colors
-                highlight.FillColor = color -- Update highlight color
-                usernameLabel.TextColor3 = color -- Update text color
-                usernameLabel.TextStrokeTransparency = .01 -- Reset stroke transparency
-                wait(0.02) -- Wait for a smoother transition
-            end
-        end
-    end
-
-    -- Start changing colors
-    changeColor()
 end
 
 -- Function to recreate GUI and highlight

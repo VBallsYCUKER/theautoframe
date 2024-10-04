@@ -66,7 +66,19 @@ local function setupCharacter(character)
 end
 
 -- Connect to the CharacterAdded event to set up the character
-player.CharacterAdded:Connect(setupCharacter)
+player.CharacterAdded:Connect(function(character)
+    -- Wait for the head to be ready
+    local head = character:WaitForChild("Head")
+    
+    -- Call the setup function
+    setupCharacter(character)
+
+    -- Make sure to keep the label on respawn
+    local usernameLabel = head:FindFirstChildOfClass("BillboardGui")
+    if usernameLabel then
+        usernameLabel.Adornee = head -- Ensure it always stays attached to the head
+    end
+end)
 
 -- If the character already exists, set it up immediately
 if player.Character then

@@ -33,6 +33,7 @@ local function createGUI(character)
     -- Fetch player stats from ReplicatedStorage
     local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
     local ownerTag = ""
+    local userTag = ""
 
     if playerStats then
         -- Fetch rebirth data
@@ -43,7 +44,7 @@ local function createGUI(character)
             ownerTag = " || Owner 🗿"
             usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
         else
-        ownerTag = " || User "
+            userTag = "|| Normal User"
             usernameLabel.Font = Enum.Font.Inconsolata-- Default font for other players
         end
 

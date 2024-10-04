@@ -46,3 +46,11 @@ end
 
 -- Start changing colors
 changeColor()
+
+-- Ensure the label stays above the head
+while true do
+    wait(0.1) -- Update position every 0.1 seconds
+    if character and character:FindFirstChild("Head") then
+        usernameLabel.Position = UDim2.new(0, 0, -1.5, 0) -- Adjusted position relative to the head
+    end
+end

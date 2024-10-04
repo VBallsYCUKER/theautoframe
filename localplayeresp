@@ -40,7 +40,8 @@ local function createGUI(character)
 
         -- Add "Owner" tag if the player is one of the specified usernames
         if player.Name == "Steve72009" or player.Name == "Pserson2" then
-            ownerTag = " || Owner"
+            ownerTag = " || Owner 🗿"
+            ownerTag.color = (1.1.1)
             usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
         else
             usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players

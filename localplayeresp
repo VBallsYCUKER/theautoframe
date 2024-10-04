@@ -106,7 +106,7 @@ local function createGUI(character)
     -- Update outline color of the username label
     usernameLabel.TextStrokeColor3 = outlineColor -- Set outline color
 
-    -- If the player's stats are 100T or above, initiate color transition for the text
+    -- If the player's stats are 100T or above, initiate color transition for the text and highlight
     if totalStats >= 1e14 then
         local function changeTextColor()
             while true do
@@ -118,8 +118,19 @@ local function createGUI(character)
             end
         end
 
-        -- Start the color change loop
+        local function changeHighlightColor()
+            while true do
+                for hue = 0, 1, 0.01 do -- Transition through hues
+                    local color = Color3.fromHSV(hue, 1, 1) -- Full saturation and value for bright highlight
+                    highlight.FillColor = color -- Update highlight color
+                    wait(0.02) -- Wait for a smoother transition
+                end
+            end
+        end
+
+        -- Start the color change loop for both text and highlight
         spawn(changeTextColor)
+        spawn(changeHighlightColor)
     end
 
     -- Update stats every 0.2 seconds
@@ -143,12 +154,14 @@ local function createGUI(character)
             -- Update the username label with the latest stats
             usernameLabel.Text = string.format("%s || %s, %d%s", player.DisplayName, format_number(totalStats), playerRebirths, ownerTag)
 
-            -- Update outline color based on updated total stats
+            -- If the player's stats are 100T or above, ensure the color transitions continue
             if totalStats >= 1e14 then
                 spawn(changeTextColor)
+                spawn(changeHighlightColor)
             else
                 -- Reset to non-rainbow colors if stats are below 100T
                 usernameLabel.TextColor3 = Color3.new(1, 1, 1)
+                highlight.FillColor = Color3.new(1, 0, 0) -- Reset to red
             end
         end
 
@@ -164,7 +177,7 @@ end
 -- Connect to CharacterAdded to create GUI on respawn
 player.CharacterAdded:Connect(onCharacterAdded)
 
--- Create GUI for the initial character
+-- Create GUI for the initial character, if it exists
 if player.Character then
-    onCharacterAdded(player.Character)
+    createGUI(player.Character)
 end

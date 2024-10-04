@@ -6,6 +6,13 @@ end
 
 local player = game:GetService("Players").LocalPlayer
 
+-- Create a highlight and store it in ReplicatedStorage
+local highlightTemplate = Instance.new("Highlight")
+highlightTemplate.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
+highlightTemplate.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+highlightTemplate.Name = "PlayerHighlight"
+highlightTemplate.Parent = game:GetService("ReplicatedStorage")
+
 -- Function to create or update the GUI
 local function createGUI(character)
     -- Wait for the character's Head to be available
@@ -43,7 +50,7 @@ local function createGUI(character)
             ownerTag = " || Owner 🗿"
             usernameLabel.Font = Enum.Font.SpecialElite -- Change font to Special Elite
         else
-            usernameLabel.Font = Enum.Font.Cartoon-- Default font for other players
+            usernameLabel.Font = Enum.Font.Cartoon -- Default font for other players
         end
 
         -- Format the display name and rebirth count with the owner tag
@@ -54,11 +61,9 @@ local function createGUI(character)
 
     usernameLabel.TextStrokeTransparency = .01
 
-    -- Create a highlight if it doesn't exist
-    local highlight = character:FindFirstChildOfClass("Highlight") or Instance.new("Highlight")
-    highlight.Parent = character
-    highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
-    highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
+    -- Create a highlight for the character
+    local highlight = highlightTemplate:Clone() -- Clone the template highlight
+    highlight.Parent = character -- Parent it to the character
 
     -- Function to change color
     local function changeColor()
@@ -81,12 +86,6 @@ end
 local function onCharacterAdded(character)
     -- Create GUI
     createGUI(character) -- Create the GUI for the new character
-
-    -- Ensure highlight is created and persistent
-    local highlight = character:FindFirstChildOfClass("Highlight") or Instance.new("Highlight")
-    highlight.Parent = character
-    highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
-    highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
 end
 
 -- Connect to CharacterAdded to create GUI on respawn
@@ -96,25 +95,6 @@ player.CharacterAdded:Connect(onCharacterAdded)
 if player.Character then
     onCharacterAdded(player.Character)
 end
-
--- Function to ensure highlight stays on the character
-local function keepHighlight()
-    while true do
-        if player.Character then
-            local highlight = player.Character:FindFirstChildOfClass("Highlight")
-            if not highlight then
-                highlight = Instance.new("Highlight")
-                highlight.Parent = player.Character
-                highlight.FillColor = Color3.new(1, 0, 0) -- Starting color (red)
-                highlight.OutlineColor = Color3.new(0, 0, 0) -- Outline color (black)
-            end
-        end
-        wait(1) -- Check every second to ensure highlight persists
-    end
-end
-
--- Start the highlight persistence function
-keepHighlight()
 
 -- Anti-AFK GUI
 wait(0.5)

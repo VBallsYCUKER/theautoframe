@@ -129,6 +129,8 @@ local function createGUI(character)
             -- Change outline color based on updated total stats
             if totalStats >= 1e11 then
                 outlineColor = Color3.fromRGB(255, 105, 180) -- Hot Pink
+            elseif totalStats >= 5e10 then
+                outlineColor = Color3.fromRGB(195, 155, 211)
             elseif totalStats >= 1e10 then
                 outlineColor = Color3.fromRGB(192, 57, 43) -- Cyan
             elseif totalStats >= 1e9 then
@@ -139,8 +141,8 @@ local function createGUI(character)
                 outlineColor = Color3.fromRGB(41, 128, 185) -- Dark Green
             elseif totalStats >= 1e6 then
                 outlineColor = Color3.fromRGB(133, 193, 233) -- Light Blue
-            else
-                outlineColor = Color3.new(171, 235, 198) -- Default color
+            elseif totalStats >= 1e5
+                outlineColor = Color3.new(0,0,0) -- Default color
             end
 
             -- Update outline color of the username label

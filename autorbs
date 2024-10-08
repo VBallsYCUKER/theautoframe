@@ -102,6 +102,203 @@ function getCheckValue()
     return checkValue
 end
 
+local PaidFormsList = {
+    Evil = {{
+        name = "SSJ2 Kaioken",
+        reqvalue = 50000,
+        endrangevalue = 160000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6950449
+    }, {
+        name = "LSSJ Kaioken",
+        reqvalue = 160001,
+        endrangevalue = 250000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6950449
+    }, {
+        name = "Mystic Kaioken",
+        reqvalue = 250001,
+        endrangevalue = 550000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6950449
+    }, {
+        name = "SSJ5",
+        reqvalue = 550001,
+        endrangevalue = 800000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6950469
+    }, {
+        name = "LSSJ3",
+        reqvalue = 800001,
+        endrangevalue = 1000000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6951002
+    }, {
+        name = "SSJG4",
+        reqvalue = 1000001,
+        endrangevalue = 1800000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6950465
+    }, {
+        name = "LSSJ4",
+        reqvalue = 1800001,
+        endrangevalue = 3000000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6951002
+    }, {
+        name = "LSSJG",
+        reqvalue = 3000001,
+        endrangevalue = 4000000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6951002
+    }, {
+        name = "Super Broly",
+        reqvalue = 4000000,
+        endrangevalue = 30000000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 7837022
+    }, {
+        name = "True God of Destruction",
+        reqvalue = 30000001,
+        endrangevalue = 50000000,
+        alignment = "Evil",
+        rebirthReq = 10,
+        formOwned = false,
+        GamePassID = 9848987
+    }, {
+        name = "SSJB4",
+        reqvalue = 50000001,
+        endrangevalue = 100000000000000000000000,
+        alignment = "Neutral",
+        rebirthReq = 13,
+        formOwned = false,
+        GamePassID = 6950465
+    }, {
+        name = "Blanco",
+        reqvalue = 120000001,
+        endrangevalue = 100000000000000000000000,
+        alignment = "Neutral",
+        rebirthReq = 24,
+        formOwned = false,
+        GamePassID = 676684901
+    }},
+    Good = {{
+        name = "SSJ2 Kaioken",
+        reqvalue = 50000,
+        endrangevalue = 160000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6950449
+    }, {
+        name = "LSSJ Kaioken",
+        reqvalue = 160001,
+        endrangevalue = 250000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6950449
+    }, {
+        name = "Mystic Kaioken",
+        reqvalue = 250001,
+        endrangevalue = 550000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6950449
+    }, {
+        name = "SSJ5",
+        reqvalue = 550001,
+        endrangevalue = 800000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6950469
+    }, {
+        name = "LSSJ3",
+        reqvalue = 800001,
+        endrangevalue = 1000000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6951002
+    }, {
+        name = "SSJG4",
+        reqvalue = 1000001,
+        endrangevalue = 1800000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6950465
+    }, {
+        name = "LSSJ4",
+        reqvalue = 1800001,
+        endrangevalue = 3000000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6951002
+    }, {
+        name = "LSSJG",
+        reqvalue = 3000001,
+        endrangevalue = 4000000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 6951002
+    }, {
+        name = "Super Broly",
+        reqvalue = 4000000,
+        endrangevalue = 30000000,
+        alignment = "Neutral",
+        rebirthReq = 0,
+        formOwned = false,
+        GamePassID = 7837022
+    }, {
+        name = "True God of Creation",
+        reqvalue = 30000001,
+        endrangevalue = 50000000,
+        alignment = "Good",
+        rebirthReq = 10,
+        formOwned = false,
+        GamePassID = 9848987
+    }, {
+        name = "SSJB4",
+        reqvalue = 50000001,
+        endrangevalue = 120000000,
+        alignment = "Neutral",
+        rebirthReq = 13,
+        formOwned = false,
+        GamePassID = 6950465
+    }, {
+        name = "Blanco",
+        reqvalue = 120000001,
+        endrangevalue = 100000000000000000000000,
+        alignment = "Neutral",
+        rebirthReq = 24,
+        formOwned = false,
+        GamePassID = 676684901
+    }}
+}
+
 local FormsList = {
 
     Evil = {{

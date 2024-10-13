@@ -1,5 +1,4 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/luca5432/Roblox-ANTI-AFK-SCRIPT/main/Script", true))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/VBallsYCUKER/icle/refs/heads/main/reset", true))()
 
 local loaded = false
  
@@ -858,6 +857,21 @@ repeat
 local function CheckGamePass(UserId, GamePassID)
     local MarketplaceService = game:GetService("MarketplaceService")
     return MarketplaceService:UserOwnsGamePassAsync(UserId, GamePassID)
+end
+
+-- Create a function to reset the character
+local function resetCharacter()
+    local player = game.Players.LocalPlayer  -- Get the local player
+    local character = player.Character or player.CharacterAdded:Wait()  -- Get the player's character
+
+    -- Reset the character
+    character:BreakJoints()  -- This will reset the character
+end
+
+-- Infinite loop to reset character every 5 minutes
+while true do
+    wait(60)  -- Wait for 300 seconds (5 minutes)
+    resetCharacter()  -- Call the reset function
 end
 
 local userId = game.Players.LocalPlayer.UserId 

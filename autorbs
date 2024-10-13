@@ -859,21 +859,6 @@ local function CheckGamePass(UserId, GamePassID)
     return MarketplaceService:UserOwnsGamePassAsync(UserId, GamePassID)
 end
 
--- Create a function to reset the character
-local function resetCharacter()
-    local player = game.Players.LocalPlayer  -- Get the local player
-    local character = player.Character or player.CharacterAdded:Wait()  -- Get the player's character
-
-    -- Reset the character
-    character:BreakJoints()  -- This will reset the character
-end
-
--- Infinite loop to reset character every 5 minutes
-while true do
-    wait(60)  -- Wait for 300 seconds (5 minutes)
-    resetCharacter()  -- Call the reset function
-end
-
 local userId = game.Players.LocalPlayer.UserId 
 
 for _, form in ipairs(PaidFormsList["Evil"]) do

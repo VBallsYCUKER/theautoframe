@@ -1,5 +1,5 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/luca5432/Roblox-ANTI-AFK-SCRIPT/main/Script", true))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/VBallsYCUKER/icle/refs/heads/main/timerls"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VBallsYCUKER/icle/refs/heads/main/timerls", true))()
 
 local loaded = false
  

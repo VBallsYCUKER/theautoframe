@@ -1,18 +1,5 @@
 getgenv().WebhookURL = getgenv().WebhookURL or "YOUR_WEBHOOK_URL_HERE"
-
--- Function to format large numbers
-local function format_number(number)
-    local suffixes = {"", "K", "M", "B", "T", "QD"}
-    local index = 1
-    while math.abs(number) >= 1000 and index < #suffixes do
-        number = number / 1000.0
-        index = index + 1
-    end
-    return string.format("%.2f%s", number, suffixes[index])
-end
-
--- Define quests
-local quests = {
+getgenv().quests = {  -- Store quests in the global environment
     {name = "X Fighter Trainer", nickname = "X Fighter", requiredValue = 0, endRange = 30000, planet = "Earth"},
     {name = "Klirin", nickname = "Klirin", requiredValue = 30001, endRange = 60000, planet = "Earth"},
     {name = "Kid Nohag", nickname = "Kid Nohag", requiredValue = 60001, endRange = 80000, planet = "Earth"},
@@ -39,9 +26,20 @@ local quests = {
     {name = "Vekuta (SSJBUI)", nickname = "Vekuta (SSJBUI)", requiredValue = 12000000001, endRange = 2000000000000000000, planet = "Bills"}
 }
 
+-- Function to format large numbers
+local function format_number(number)
+    local suffixes = {"", "K", "M", "B", "T", "QD"}
+    local index = 1
+    while math.abs(number) >= 1000 and index < #suffixes do
+        number = number / 1000.0
+        index = index + 1
+    end
+    return string.format("%.2f%s", number, suffixes[index])
+end
+
 -- Function to get the current quest based on player stats
 local function getCurrentQuest(value, planet)
-    for _, quest in ipairs(quests) do
+    for _, quest in ipairs(getgenv().quests) do  -- Use getgenv().quests
         if quest.planet == planet and value >= quest.requiredValue and value <= quest.endRange then
             return quest.nickname  -- Return the nickname of the current quest
         end

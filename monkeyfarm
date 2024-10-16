@@ -78,7 +78,7 @@ local function updatePlayerStatsAndSendWebhook(player)
 
         -- Send a webhook message if the current quest is different from the last quest
         if currentQuest ~= lastQuest then
-            local data = {
+            local questData = {
                 content = "",
                 embeds = {{
                     title = "Quest Update - " .. player.Name,
@@ -90,7 +90,7 @@ local function updatePlayerStatsAndSendWebhook(player)
                 username = "Quest Update Bot",
                 avatar_url = "https://cdn.discordapp.com/attachments/1294895323852050475/1295927395018215486/newid.png"
             }
-            webhookmessage(data, getgenv().WebhookURL)  -- Send the quest update message
+            webhookmessage(questData, getgenv().WebhookURL)  -- Send the quest update message
             lastQuest = currentQuest  -- Update last quest to the current quest
         end
 
@@ -104,7 +104,7 @@ local function updatePlayerStatsAndSendWebhook(player)
                 footer = {text = "v0.1", icon_url = "https://cdn.discordapp.com/attachments/1294895323852050475/1295927395018215486/newid.png"},
                 thumbnail = {url = "https://tr.rbxcdn.com/180DAY-fa4640ea47b1096f1be0d0ecb3e58ba9/768/432/Image/Webp/noFilter"}
             }},
-            username = "Stat Bot",
+            username = "Stat Update Bot",
             avatar_url = "https://cdn.discordapp.com/attachments/1294895323852050475/1295927395018215486/newid.png"
         }
         webhookmessage(dataStats, getgenv().WebhookURL)  -- Send player stats message

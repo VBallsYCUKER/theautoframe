@@ -767,51 +767,7 @@ local function webhookmessage(data1, link)
     print(response.Success)
 end
 
-local function tpwebhook()
-
-    currentworld = ""
-    if game.placeId == 5151400895 then
-        currentworld = "Bills"
-    else
-        currentworld = "Earth"
-    end
-    local data1 = {
-        ["content"] = "",
-        ["embeds"] = {{
-            ["title"] = "Dbu Farm - " .. game.Players.LocalPlayer.Name,
-
-            ["description"] = "\nPlayer is now in planet **" .. currentworld .. "**",
-            ["color"] = 6248703,
-            ["footer"] = {
-                ["text"] = "Script Version v9.0",
-                ["icon_url"] = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/ccceaa97-debb-4d23-9012-1df4dab74e1e/de0uz55-d81baa8f-a1e6-4c85-a116-a7c865d81f2b.png/v1/fill/w_1024,h_576,q_80,strp/dragon_blox_ultimate_by_itzduo_de0uz55-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTc2IiwicGF0aCI6IlwvZlwvY2NjZWFhOTctZGViYi00ZDIzLTkwMTItMWRmNGRhYjc0ZTFlXC9kZTB1ejU1LWQ4MWJhYThmLWExZTYtNGM4NS1hMTE2LWE3Yzg2NWQ4MWYyYi5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.f25oq5g593PcgSZFvy1nANEOTDVidFgugu9iQdPZG_Y"
-            },
-            ["thumbnail"] = {
-                ["url"] = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/ccceaa97-debb-4d23-9012-1df4dab74e1e/de0uz55-d81baa8f-a1e6-4c85-a116-a7c865d81f2b.png/v1/fill/w_1024,h_576,q_80,strp/dragon_blox_ultimate_by_itzduo_de0uz55-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTc2IiwicGF0aCI6IlwvZlwvY2NjZWFhOTctZGViYi00ZDIzLTkwMTItMWRmNGRhYjc0ZTFlXC9kZTB1ejU1LWQ4MWJhYThmLWExZTYtNGM4NS1hMTE2LWE3Yzg2NWQ4MWYyYi5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.f25oq5g593PcgSZFvy1nANEOTDVidFgugu9iQdPZG_Y"
-            }
-        }},
-        ["username"] = "Ultimate DBU Farm",
-        ["avatar_url"] = "https://static.wixstatic.com/media/03c1b0_f5011faad54b4e7f92cf106217e618d9~mv2.jpg/v1/fill/w_1933,h_763,al_c/03c1b0_f5011faad54b4e7f92cf106217e618d9~mv2.jpg",
-        ["attachments"] = {}
-    }
-
-    local HttpService = game:GetService("HttpService")
-
-    local response = http_request({
-        Url = "https://ptb.discord.com/api/webhooks/1295941014799781960/j9YzqLPk3HXKIGa0af32TqEsFHtTeYfd22SrgkKXnTZsuqBUj0xuztB0iCBM0fBPhJxj",
-
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-
-        Body = HttpService:JSONEncode(data1)
-    })
-
-    print(response.Success)
-end
-pcall(function() tpwebhook() end)
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VBallsYCUKER/theautoframe/refs/heads/main/webhook"))()
 
 local function check1()
     pcall(function()
@@ -1340,30 +1296,7 @@ check1()
                                         .Quest.Value == SelectedQuests or
                                         game.Players.LocalPlayer.Character.Humanoid.Health <= 0
                                 end -- undefine
-                                data1 = {
-                                    ["content"] = "",
-                                    ["embeds"] = {{
-                                        ["title"] = "Dbu Farm - " .. game.Players.LocalPlayer.Name,
-            
-                                        ["description"] = "\n**Boss:**\n " .. SelectedQuests .. "\n**Stats:**\n " .. tostring(format_number(checkValue)),
-                                        ["color"] = 6248703,
-                                        ["footer"] = {
-                                            ["text"] = "Script Version v9.0",
-                                            ["icon_url"] = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/ccceaa97-debb-4d23-9012-1df4dab74e1e/de0uz55-d81baa8f-a1e6-4c85-a116-a7c865d81f2b.png/v1/fill/w_1024,h_576,q_80,strp/dragon_blox_ultimate_by_itzduo_de0uz55-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTc2IiwicGF0aCI6IlwvZlwvY2NjZWFhOTctZGViYi00ZDIzLTkwMTItMWRmNGRhYjc0ZTFlXC9kZTB1ejU1LWQ4MWJhYThmLWExZTYtNGM4NS1hMTE2LWE3Yzg2NWQ4MWYyYi5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.f25oq5g593PcgSZFvy1nANEOTDVidFgugu9iQdPZG_Y"
-                                        },
-                                        ["thumbnail"] = {
-                                            ["url"] = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/ccceaa97-debb-4d23-9012-1df4dab74e1e/de0uz55-d81baa8f-a1e6-4c85-a116-a7c865d81f2b.png/v1/fill/w_1024,h_576,q_80,strp/dragon_blox_ultimate_by_itzduo_de0uz55-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTc2IiwicGF0aCI6IlwvZlwvY2NjZWFhOTctZGViYi00ZDIzLTkwMTItMWRmNGRhYjc0ZTFlXC9kZTB1ejU1LWQ4MWJhYThmLWExZTYtNGM4NS1hMTE2LWE3Yzg2NWQ4MWYyYi5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.f25oq5g593PcgSZFvy1nANEOTDVidFgugu9iQdPZG_Y"
-                                        }
-                                    }},
-                                    ["username"] = "Ultimate DBU Farm",
-                                    ["avatar_url"] = "https://static.wixstatic.com/media/03c1b0_f5011faad54b4e7f92cf106217e618d9~mv2.jpg/v1/fill/w_1933,h_763,al_c/03c1b0_f5011faad54b4e7f92cf106217e618d9~mv2.jpg",
-                                    ["attachments"] = {}
-                                }
-            
-                                
-                                webhookmessage(data1, "https://ptb.discord.com/api/webhooks/1295960758475161663/fBFadrnMRrjXOATlvzmwYnnC0JFdJ8VQBa-fDkH_jM42Ev9ztcQBQXDLiCQhnAs5AaAE")
-                            end
-
+                                loadstring(game:HttpGet("https://raw.githubusercontent.com/VBallsYCUKER/theautoframe/refs/heads/main/qwebhook"))()
                             if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                                 for i, v in ipairs(game:GetService("Workspace").Living:GetChildren()) do
                                     task.wait()

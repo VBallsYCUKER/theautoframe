@@ -1,0 +1,33 @@
+
+local function format_number(value)
+    -- Your number formatting logic here
+    return value -- Replace this with your formatted value
+end
+
+local SelectedQuests = "Your Selected Quest" -- Define this based on your logic
+local checkValue = 12345 -- Replace this with your actual value
+
+local data1 = {
+    ["content"] = "",
+    ["embeds"] = {{
+        ["title"] = "Stat Farm - " .. game.Players.LocalPlayer.Name,
+        ["description"] = "\n**Boss:**\n " .. SelectedQuests .. "\n**Stats:**\n " .. tostring(format_number(checkValue)),
+        ["color"] = 6248703,
+        ["footer"] = {
+            ["text"] = "Stat Farm v0.3",
+            ["icon_url"] = "https://cdn.discordapp.com/attachments/1294895323852050475/1295927395018215486/newid.png?ex=67106df0&is=670f1c70&hm=4c9506318db653412ee1b96990b09051f78598b92403c3ae7e5f443efa2cdc10&"
+        },
+        ["thumbnail"] = {
+            ["url"] = "https://tr.rbxcdn.com/180DAY-fa4640ea47b1096f1be0d0ecb3e58ba9/768/432/Image/Webp/noFilter"
+        }
+    }},
+    ["username"] = "Stat Farm",
+    ["avatar_url"] = "https://cdn.discordapp.com/attachments/1294895323852050475/1295927395018215486/newid.png?ex=67106df0&is=670f1c70&hm=4c9506318db653412ee1b96990b09051f78598b92403c3ae7e5f443efa2cdc10&",
+    ["attachments"] = {}
+}
+
+local function webhookmessage(data, url)
+    -- Your webhook logic here
+end
+
+webhookmessage(data1, "https://ptb.discord.com/api/webhooks/1295960758475161663/fBFadrnMRrjXOATlvzmwYnnC0JFdJ8VQBa-fDkH_jM42Ev9ztcQBQXDLiCQhnAs5AaAE")

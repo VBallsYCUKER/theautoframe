@@ -38,7 +38,7 @@ local function tpwebhook()
                 ["url"] = "https://tr.rbxcdn.com/180DAY-fa4640ea47b1096f1be0d0ecb3e58ba9/768/432/Image/Webp/noFilter"
             }
         }},
-        ["username"] = "Ultimate DBU Farm",
+        ["username"] = "webhook testing",
         ["avatar_url"] = "https://cdn.discordapp.com/attachments/1294895323852050475/1295927395018215486/newid.png?ex=67106df0&is=670f1c70&hm=4c9506318db653412ee1b96990b09051f78598b92403c3ae7e5f443efa2cdc10&",
         ["attachments"] = {}
     }

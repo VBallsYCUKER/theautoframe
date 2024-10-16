@@ -749,74 +749,102 @@ local quests = {{
     endRange = 2000000000000000000,
     planet = "Bills"
 }}
+-- Soon to be Oozaru Statting Farm
+local loaded = false
+local webhookUrl = "YOUR_WEBHOOK_URL" -- Replace with your Discord Webhook URL
 
--- Ensure getgenv() is used so the WebhookURL is globally accessible
-getgenv().WebhookURL = getgenv().WebhookURL or "YOUR_WEBHOOK_URL_HERE"
-
--- Function to send a webhook message
-local function webhookmessage(data1, link)
-    local HttpService = game:GetService("HttpService")
-
-    local response = http_request({
-        Url = link,
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = HttpService:JSONEncode(data1)
-    })
-
-    print(response.Success)
-end
-
--- Function to send specific webhook data
-local function tpwebhook()
-    local currentworld = ""
-    
-    -- Detecting the world based on the game's place ID
-    if game.PlaceId == 5151400895 then
-        currentworld = "Bills"
-    else
-        currentworld = "Earth"
-    end
-
-    -- Preparing the data for the webhook message
-    local data1 = {
-        ["content"] = "",
-        ["embeds"] = {{
-            ["title"] = "Stat Farm - " .. game.Players.LocalPlayer.Name,
-            ["description"] = "Planet: **" .. currentworld .. "**",  -- Changed to "Planet:" without "\n"
-            ["color"] = 6248703,
-            ["footer"] = {
-                ["text"] = "v0.1",
-                ["icon_url"] = "https://cdn.discordapp.com/attachments/1294895323852050475/1295927395018215486/newid.png?ex=67106df0&is=670f1c70&hm=4c9506318db653412ee1b96990b09051f78598b92403c3ae7e5f443efa2cdc10&"
-            },
-            ["thumbnail"] = {
-                ["url"] = "https://tr.rbxcdn.com/180DAY-fa4640ea47b1096f1be0d0ecb3e58ba9/768/432/Image/Webp/noFilter"
-            }
-        }},
-        ["username"] = "webhook testing",
-        ["avatar_url"] = "https://cdn.discordapp.com/attachments/1294895323852050475/1295927395018215486/newid.png?ex=67106df0&is=670f1c70&hm=4c9506318db653412ee1b96990b09051f78598b92403c3ae7e5f443efa2cdc10&",
-        ["attachments"] = {}
+local function sendToWebhook(message)
+    local http = game:GetService("HttpService")
+    local data = {
+        ["content"] = message
     }
+    local headers = {
+        ["Content-Type"] = "application/json"
+    }
+    local body = http:JSONEncode(data)
 
-    -- Sending the HTTP POST request with the webhook URL
-    local HttpService = game:GetService("HttpService")
-
-    local response = http_request({
-        Url = getgenv().WebhookURL,  -- Using the URL from the getgenv() table
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = HttpService:JSONEncode(data1)
-    })
-
-    print(response.Success)
+    http:PostAsync(webhookUrl, body, Enum.HttpContentType.ApplicationJson)
 end
 
--- Safely calling the webhook function
-pcall(function() tpwebhook() end)
+-- Helper to get the player's stats
+function getPlayerStats()
+    local data = game.ReplicatedStorage.Datas[game.Players.LocalPlayer.UserId]
+    local strength = data.Strength.Value
+    local energy = data.Energy.Value
+    local defense = data.Defense.Value
+    local speed = data.Speed.Value
+
+    return {
+        Strength = strength,
+        Energy = energy,
+        Defense = defense,
+        Speed = speed
+    }
+end
+
+-- Helper to get the current quest info
+function getCurrentQuest()
+    local data = game.ReplicatedStorage.Datas[game.Players.LocalPlayer.UserId]
+    local currentValue = getCheckValue()
+    
+    for _, quest in pairs(quests) do
+        if currentValue >= quest.requiredValue and currentValue <= quest.endRange then
+            return quest.name
+        end
+    end
+    return "No Quest"
+end
+
+-- Send stats and quest to the webhook
+function sendPlayerStatsToWebhook()
+    local stats = getPlayerStats()
+    local currentQuest = getCurrentQuest()
+
+    local message = string.format(
+        "**Player Stats**\nStrength: %s\nEnergy: %s\nDefense: %s\nSpeed: %s\n\n**Current Quest:** %s",
+        format_number(stats.Strength),
+        format_number(stats.Energy),
+        format_number(stats.Defense),
+        format_number(stats.Speed),
+        currentQuest
+    )
+
+    sendToWebhook(message)
+end
+
+-- Wait until the game is loaded and player is ready
+local success, err = pcall(function()
+    while not loaded do
+        if game["loaded"] then
+            loaded = true
+            break
+        end
+    end
+end)
+
+if success then
+    warn("Game loaded successfully")
+else
+    warn("Error occurred:", err)
+end
+
+-- Wait for player data to be ready
+local success, result = pcall(function()
+    repeat task.wait() until game.Players.LocalPlayer ~= nil
+    repeat task.wait() until game:IsLoaded()
+    game:WaitForChild("ReplicatedStorage")
+    game.ReplicatedStorage:WaitForChild("Datas")
+    game.ReplicatedStorage.Datas:WaitForChild(game.Players.LocalPlayer.UserId)
+end)
+
+if success then
+    warn("Player data loaded successfully")
+else
+    warn("Error occurred:", err)
+end
+
+-- Send player stats to the webhook when the game is fully loaded
+sendPlayerStatsToWebhook()
 
 
 local function check1()

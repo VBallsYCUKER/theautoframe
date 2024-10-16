@@ -1,14 +1,13 @@
+
 local function webhookmessage(data1, link)
     local HttpService = game:GetService("HttpService")
 
     local response = http_request({
         Url = link,
-
         Method = "POST",
         Headers = {
             ["Content-Type"] = "application/json"
         },
-
         Body = HttpService:JSONEncode(data1)
     })
 
@@ -16,19 +15,18 @@ local function webhookmessage(data1, link)
 end
 
 local function tpwebhook()
-
     currentworld = ""
-    if game.placeId == 5151400895 then
+    if game.PlaceId == 5151400895 then
         currentworld = "Bills"
     else
         currentworld = "Earth"
     end
+
     local data1 = {
         ["content"] = "",
         ["embeds"] = {{
             ["title"] = "Stat Farm - " .. game.Players.LocalPlayer.Name,
-
-            ["description"] = "\nPlanet: **" .. currentworld .. "**",
+            ["description"] = "Planet: **" .. currentworld .. "**",  -- Changed to "Planet:" without "\n"
             ["color"] = 6248703,
             ["footer"] = {
                 ["text"] = "v0.1",
@@ -46,16 +44,15 @@ local function tpwebhook()
     local HttpService = game:GetService("HttpService")
 
     local response = http_request({
-        Url = "https://ptb.discord.com/api/webhooks/1259310858354298881/YSS4zjRWfabHMfk1mbF6VXhBeqkGKsD1CfUzBDg8GrGb2iGzCGOgzdviKB00dETMguw-",
-
+        Url = getgenv().WebhookURL,  -- Using the URL from the getgenv() table
         Method = "POST",
         Headers = {
             ["Content-Type"] = "application/json"
         },
-
         Body = HttpService:JSONEncode(data1)
     })
 
     print(response.Success)
 end
+
 pcall(function() tpwebhook() end)

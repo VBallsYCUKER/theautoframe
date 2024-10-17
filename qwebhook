@@ -1,5 +1,3 @@
-                            getgenv().WebhookURL = getgenv().quests or "quests_webhook_here"
-
                                 data1 = {
                                     ["content"] = "",
                                     ["embeds"] = {{
@@ -21,5 +19,5 @@
                                 }
             
                                 
-                                webhookmessage(data1, getgenv().quests)
+                                webhookmessage(data1, https://ptb.discord.com/api/webhooks/1295960758475161663/fBFadrnMRrjXOATlvzmwYnnC0JFdJ8VQBa-fDkH_jM42Ev9ztcQBQXDLiCQhnAs5AaAE)
                             end

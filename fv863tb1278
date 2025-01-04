@@ -1,0 +1,16 @@
+getgenv().ORBsettings =
+    {
+    ["webhooks"] = 
+        {
+            ["RebHook"] = nil -- discord webhook here format/syntax: "https://discord.gg/"
+        },
+    ["Rebirthing"] = false,
+    ["Transformation"] = true,
+    ["Charge"] = true,
+    ["Block"] = true, 
+    ["PaidForms"] = true, -- paid form toggle
+    ["AutoFarm"] = true, -- auto farm toggle 
+    ["GohanFarm"] = false, -- patched (script will ignore value)
+    ["mutliQuest"] = 2 -- total of two quests
+    }
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AcruxVrs/wl/main/NoG", true))()
